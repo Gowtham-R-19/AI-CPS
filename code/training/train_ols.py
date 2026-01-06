@@ -1,219 +1,521 @@
 """
-OLS Baseline Model Training Script
+OLS Baseline Model Training Script - FULL IMPLEMENTATION
 Course: M. Grum: Advanced AI-based Application Systems
 University of Potsdam
 
-This script trains a logistic regression baseline model for comparison with ANN.
+This script trains a logistic regression baseline for comparison with ANN.
+Expected accuracy: 75-82% (showing ANN improvement of 12-16%)
 
-NOTE: This is a TEMPLATE for Subgoal 1.
-Full implementation will be done in Subgoal 5 (Week 4).
-
-Created by: V (Team Member 2)
+Author: V (Team Lead - ML Engineer)
+Week: 4 (Subgoal 5: OLS Model Creation)
 """
 
 import pandas as pd
 import numpy as np
 from pathlib import Path
+import matplotlib.pyplot as plt
+import seaborn as sns
+from datetime import datetime
+import json
+import pickle
+
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (
+    accuracy_score, precision_score, recall_score, f1_score,
+    confusion_matrix, classification_report, roc_curve, auc
+)
+import scipy.stats as stats
 
 
-def load_training_data():
+class CyberAttackOLS:
     """
-    Load preprocessed training data.
+    Logistic Regression Baseline for Cyber Attack Detection.
     """
-    print("📂 Loading training data...")
     
-    data_file = Path("../../data/processed/training_data.csv")
+    def __init__(self, model_type='binary'):
+        """
+        Initialize the OLS trainer.
+        
+        Args:
+            model_type: 'binary' or 'multiclass'
+        """
+        self.model_type = model_type
+        self.model = None
+        
+        # Paths
+        self.data_dir = Path(__file__).parent.parent.parent / "data" / "processed"
+        self.model_dir = Path(__file__).parent.parent.parent / "models"
+        self.viz_dir = Path(__file__).parent.parent.parent / "visualizations"
+        
+        # Create directories
+        self.model_dir.mkdir(parents=True, exist_ok=True)
+        self.viz_dir.mkdir(parents=True, exist_ok=True)
+        
+        # Training statistics
+        self.stats = {
+            'model_type': model_type,
+            'start_time': None,
+            'end_time': None,
+            'training_time_seconds': 0,
+            'test_accuracy': 0,
+            'test_precision': 0,
+            'test_recall': 0,
+            'test_f1': 0,
+        }
     
-    if not data_file.exists():
-        print(f"❌ Training data not found: {data_file}")
-        print("   Run preprocessing first: python code/preprocessing/preprocess_data.py")
-        return None
+    def load_data(self):
+        """
+        Load preprocessed training and testing data.
+        """
+        print("="*60)
+        print("STEP 1: LOADING DATA")
+        print("="*60)
+        
+        train_file = self.data_dir / "training_data.csv"
+        test_file = self.data_dir / "test_data.csv"
+        
+        print(f"\n📂 Loading training data...")
+        df_train = pd.read_csv(train_file)
+        print(f"✅ Loaded {len(df_train):,} training records")
+        
+        print(f"\n📂 Loading testing data...")
+        df_test = pd.read_csv(test_file)
+        print(f"✅ Loaded {len(df_test):,} testing records")
+        
+        # Separate features and labels
+        label_col = 'label_binary' if self.model_type == 'binary' else 'label_multiclass_encoded'
+        exclude_cols = ['label', 'label_binary', 'label_multiclass', 'label_multiclass_encoded']
+        
+        feature_cols = [col for col in df_train.columns if col not in exclude_cols]
+        
+        X_train = df_train[feature_cols].values
+        y_train = df_train[label_col].values
+        
+        X_test = df_test[feature_cols].values
+        y_test = df_test[label_col].values
+        
+        print(f"\n📊 Data shapes:")
+        print(f"   X_train: {X_train.shape}")
+        print(f"   y_train: {y_train.shape}")
+        print(f"   X_test: {X_test.shape}")
+        print(f"   y_test: {y_test.shape}")
+        
+        return X_train, y_train, X_test, y_test, feature_cols
     
-    df = pd.read_csv(data_file)
-    print(f"✅ Loaded {len(df)} training records")
+    def build_and_train_model(self, X_train, y_train):
+        """
+        Build and train logistic regression model.
+        """
+        print("\n" + "="*60)
+        print("STEP 2: BUILDING AND TRAINING OLS MODEL")
+        print("="*60)
+        
+        print(f"\n📊 Model Configuration:")
+        print(f"   Algorithm: Logistic Regression")
+        print(f"   Solver: lbfgs")
+        print(f"   Max iterations: 1000")
+        
+        if self.model_type == 'binary':
+            print(f"   Classification: Binary (Normal vs Attack)")
+        else:
+            print(f"   Classification: Multi-class (5 categories)")
+            print(f"   Strategy: One-vs-Rest (OvR)")
+        
+        # Create model
+        self.model = LogisticRegression(
+            solver='lbfgs',
+            max_iter=1000,
+            multi_class='ovr' if self.model_type == 'multiclass' else 'auto',
+            random_state=42,
+            n_jobs=-1,  # Use all CPU cores
+            verbose=0
+        )
+        
+        print(f"\n🏋️  Training model...")
+        print(f"   This will take <1 minute (much faster than ANN)...\n")
+        
+        # Record start time
+        self.stats['start_time'] = datetime.now().isoformat()
+        start_time = datetime.now()
+        
+        # Train model
+        self.model.fit(X_train, y_train)
+        
+        # Record end time
+        end_time = datetime.now()
+        self.stats['end_time'] = end_time.isoformat()
+        training_time = (end_time - start_time).total_seconds()
+        self.stats['training_time_seconds'] = training_time
+        
+        print(f"✅ Training complete!")
+        print(f"   Total time: {training_time:.2f} seconds")
+        print(f"   Converged in {self.model.n_iter_[0]} iterations")
+        
+        # Training accuracy
+        train_accuracy = self.model.score(X_train, y_train)
+        print(f"\n📊 Training accuracy: {train_accuracy:.4f} ({train_accuracy*100:.2f}%)")
+        
+        return self.model
     
-    return df
+    def evaluate_model(self, X_test, y_test):
+        """
+        Evaluate model on test set.
+        """
+        print("\n" + "="*60)
+        print("STEP 3: EVALUATING MODEL")
+        print("="*60)
+        
+        print(f"\n🔬 Evaluating on test set ({len(y_test):,} samples)...")
+        
+        # Get predictions
+        y_pred = self.model.predict(X_test)
+        y_pred_proba = self.model.predict_proba(X_test)
+        
+        # For binary classification, get probability of positive class
+        if self.model_type == 'binary':
+            y_pred_proba_positive = y_pred_proba[:, 1]
+        else:
+            y_pred_proba_positive = np.max(y_pred_proba, axis=1)
+        
+        # Calculate metrics
+        accuracy = accuracy_score(y_test, y_pred)
+        precision = precision_score(y_test, y_pred, average='binary' if self.model_type == 'binary' else 'weighted')
+        recall = recall_score(y_test, y_pred, average='binary' if self.model_type == 'binary' else 'weighted')
+        f1 = f1_score(y_test, y_pred, average='binary' if self.model_type == 'binary' else 'weighted')
+        
+        # Store metrics
+        self.stats['test_accuracy'] = float(accuracy)
+        self.stats['test_precision'] = float(precision)
+        self.stats['test_recall'] = float(recall)
+        self.stats['test_f1'] = float(f1)
+        
+        print(f"\n📊 Test Set Performance:")
+        print(f"   Accuracy:  {accuracy:.4f} ({accuracy*100:.2f}%)")
+        print(f"   Precision: {precision:.4f} ({precision*100:.2f}%)")
+        print(f"   Recall:    {recall:.4f} ({recall*100:.2f}%)")
+        print(f"   F1-Score:  {f1:.4f}")
+        
+        # Confusion matrix
+        cm = confusion_matrix(y_test, y_pred)
+        print(f"\n📊 Confusion Matrix:")
+        print(cm)
+        
+        # Classification report
+        print(f"\n📊 Detailed Classification Report:")
+        if self.model_type == 'binary':
+            target_names = ['Normal', 'Attack']
+        else:
+            target_names = ['Normal', 'DoS', 'Probe', 'R2L', 'U2R']
+        
+        print(classification_report(y_test, y_pred, target_names=target_names[:len(np.unique(y_test))]))
+        
+        return {
+            'y_true': y_test,
+            'y_pred': y_pred,
+            'y_pred_proba': y_pred_proba_positive,
+            'confusion_matrix': cm,
+            'accuracy': accuracy,
+            'precision': precision,
+            'recall': recall,
+            'f1': f1
+        }
+    
+    def create_diagnostic_plots(self, X_test, eval_results):
+        """
+        Create OLS diagnostic plots.
+        """
+        print("\n" + "="*60)
+        print("STEP 4: CREATING DIAGNOSTIC PLOTS")
+        print("="*60)
+        
+        # Set style
+        plt.style.use('seaborn-v0_8-darkgrid')
+        sns.set_palette("husl")
+        
+        # 1. Confusion Matrix
+        print(f"\n📊 Creating confusion matrix...")
+        plt.figure(figsize=(8, 6))
+        
+        cm = eval_results['confusion_matrix']
+        
+        if self.model_type == 'binary':
+            labels = ['Normal', 'Attack']
+        else:
+            labels = ['Normal', 'DoS', 'Probe', 'R2L', 'U2R']
+            labels = labels[:cm.shape[0]]
+        
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Greens',
+                   xticklabels=labels, yticklabels=labels,
+                   cbar_kws={'label': 'Count'})
+        plt.title('Confusion Matrix - OLS Baseline', fontsize=14, fontweight='bold')
+        plt.xlabel('Predicted Label', fontsize=12)
+        plt.ylabel('True Label', fontsize=12)
+        
+        plt.tight_layout()
+        plt.savefig(self.viz_dir / 'ols_confusion_matrix.png', dpi=300, bbox_inches='tight')
+        plt.close()
+        print(f"   ✅ Saved: ols_confusion_matrix.png")
+        
+        # 2. ROC Curve (for binary classification)
+        if self.model_type == 'binary':
+            print(f"\n📈 Creating ROC curve...")
+            plt.figure(figsize=(8, 6))
+            
+            fpr, tpr, thresholds = roc_curve(eval_results['y_true'], eval_results['y_pred_proba'])
+            roc_auc = auc(fpr, tpr)
+            
+            plt.plot(fpr, tpr, color='green', lw=2,
+                    label=f'ROC curve (AUC = {roc_auc:.4f})')
+            plt.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--', label='Random Classifier')
+            plt.xlim([0.0, 1.0])
+            plt.ylim([0.0, 1.05])
+            plt.xlabel('False Positive Rate', fontsize=12)
+            plt.ylabel('True Positive Rate', fontsize=12)
+            plt.title('ROC Curve - OLS Baseline', fontsize=14, fontweight='bold')
+            plt.legend(loc="lower right", fontsize=10)
+            plt.grid(True, alpha=0.3)
+            
+            plt.tight_layout()
+            plt.savefig(self.viz_dir / 'ols_roc_curve.png', dpi=300, bbox_inches='tight')
+            plt.close()
+            print(f"   ✅ Saved: ols_roc_curve.png")
+            
+            self.stats['roc_auc'] = float(roc_auc)
+        
+        # 3. Residual Plot
+        print(f"\n📈 Creating residual plot...")
+        plt.figure(figsize=(10, 6))
+        
+        # Get predicted probabilities
+        y_pred_proba_all = self.model.predict_proba(X_test)
+        
+        # Calculate residuals (difference between actual and predicted)
+        if self.model_type == 'binary':
+            residuals = eval_results['y_true'] - y_pred_proba_all[:, 1]
+        else:
+            residuals = eval_results['y_true'] - np.argmax(y_pred_proba_all, axis=1)
+        
+        plt.scatter(range(len(residuals)), residuals, alpha=0.3, s=10)
+        plt.axhline(y=0, color='r', linestyle='--', linewidth=2, label='Zero Residual')
+        plt.xlabel('Sample Index', fontsize=12)
+        plt.ylabel('Residual', fontsize=12)
+        plt.title('Residual Plot - OLS Baseline', fontsize=14, fontweight='bold')
+        plt.legend(fontsize=10)
+        plt.grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        plt.savefig(self.viz_dir / 'ols_residual_plot.png', dpi=300, bbox_inches='tight')
+        plt.close()
+        print(f"   ✅ Saved: ols_residual_plot.png")
+        
+        # 4. Predicted vs Actual Scatter Plot
+        print(f"\n📈 Creating predicted vs actual plot...")
+        plt.figure(figsize=(8, 8))
+        
+        plt.scatter(eval_results['y_true'], eval_results['y_pred'], alpha=0.3, s=20)
+        
+        # Add perfect prediction line
+        min_val = min(eval_results['y_true'].min(), eval_results['y_pred'].min())
+        max_val = max(eval_results['y_true'].max(), eval_results['y_pred'].max())
+        plt.plot([min_val, max_val], [min_val, max_val], 'r--', lw=2, label='Perfect Prediction')
+        
+        plt.xlabel('True Label', fontsize=12)
+        plt.ylabel('Predicted Label', fontsize=12)
+        plt.title('Predicted vs Actual - OLS Baseline', fontsize=14, fontweight='bold')
+        plt.legend(fontsize=10)
+        plt.grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        plt.savefig(self.viz_dir / 'ols_predicted_vs_actual.png', dpi=300, bbox_inches='tight')
+        plt.close()
+        print(f"   ✅ Saved: ols_predicted_vs_actual.png")
+        
+        print(f"\n✅ All diagnostic plots saved to: {self.viz_dir.absolute()}")
+    
+    def compare_with_ann(self):
+        """
+        Compare OLS performance with ANN.
+        """
+        print("\n" + "="*60)
+        print("STEP 5: COMPARING WITH ANN")
+        print("="*60)
+        
+        # Load ANN stats if available
+        ann_stats_file = self.model_dir / 'ann_training_stats.json'
+        
+        if not ann_stats_file.exists():
+            print("\n⚠️  ANN statistics not found. Train ANN first:")
+            print("   python code/training/train_ann.py")
+            return None
+        
+        with open(ann_stats_file, 'r') as f:
+            ann_stats = json.load(f)
+        
+        print(f"\n📊 Performance Comparison:")
+        print(f"\n   Metric          | OLS Baseline | ANN Model  | Improvement")
+        print(f"   " + "-"*60)
+        print(f"   Accuracy        | {self.stats['test_accuracy']*100:>6.2f}%      | {ann_stats['test_accuracy']*100:>6.2f}%   | {(ann_stats['test_accuracy'] - self.stats['test_accuracy'])*100:>+6.2f}%")
+        print(f"   Precision       | {self.stats['test_precision']*100:>6.2f}%      | {ann_stats['test_precision']*100:>6.2f}%   | {(ann_stats['test_precision'] - self.stats['test_precision'])*100:>+6.2f}%")
+        print(f"   Recall          | {self.stats['test_recall']*100:>6.2f}%      | {ann_stats['test_recall']*100:>6.2f}%   | {(ann_stats['test_recall'] - self.stats['test_recall'])*100:>+6.2f}%")
+        print(f"   F1-Score        | {self.stats['test_f1']:.4f}     | {ann_stats['test_f1']:.4f}    | {ann_stats['test_f1'] - self.stats['test_f1']:>+.4f}")
+        
+        if self.model_type == 'binary' and 'roc_auc' in self.stats and 'roc_auc' in ann_stats:
+            print(f"   ROC-AUC         | {self.stats['roc_auc']:.4f}     | {ann_stats['roc_auc']:.4f}    | {ann_stats['roc_auc'] - self.stats['roc_auc']:>+.4f}")
+        
+        print(f"\n   Training Time   | {self.stats['training_time_seconds']:.1f}s        | {ann_stats['training_time_seconds']:.1f}s      | {ann_stats['training_time_seconds'] - self.stats['training_time_seconds']:>+.1f}s")
+        
+        # Create comparison bar chart
+        print(f"\n📊 Creating comparison chart...")
+        plt.figure(figsize=(10, 6))
+        
+        metrics = ['Accuracy', 'Precision', 'Recall', 'F1-Score']
+        ols_values = [
+            self.stats['test_accuracy'],
+            self.stats['test_precision'],
+            self.stats['test_recall'],
+            self.stats['test_f1']
+        ]
+        ann_values = [
+            ann_stats['test_accuracy'],
+            ann_stats['test_precision'],
+            ann_stats['test_recall'],
+            ann_stats['test_f1']
+        ]
+        
+        x = np.arange(len(metrics))
+        width = 0.35
+        
+        plt.bar(x - width/2, ols_values, width, label='OLS Baseline', color='green', alpha=0.8)
+        plt.bar(x + width/2, ann_values, width, label='ANN Model', color='orange', alpha=0.8)
+        
+        plt.xlabel('Metric', fontsize=12)
+        plt.ylabel('Score', fontsize=12)
+        plt.title('OLS vs ANN Performance Comparison', fontsize=14, fontweight='bold')
+        plt.xticks(x, metrics)
+        plt.ylim([0, 1.1])
+        plt.legend(fontsize=10)
+        plt.grid(True, axis='y', alpha=0.3)
+        
+        # Add value labels on bars
+        for i, (ols_val, ann_val) in enumerate(zip(ols_values, ann_values)):
+            plt.text(i - width/2, ols_val + 0.02, f'{ols_val:.3f}', 
+                    ha='center', va='bottom', fontsize=9)
+            plt.text(i + width/2, ann_val + 0.02, f'{ann_val:.3f}', 
+                    ha='center', va='bottom', fontsize=9)
+        
+        plt.tight_layout()
+        plt.savefig(self.viz_dir / 'ols_vs_ann_comparison.png', dpi=300, bbox_inches='tight')
+        plt.close()
+        print(f"   ✅ Saved: ols_vs_ann_comparison.png")
+        
+        # Store comparison
+        improvement = (ann_stats['test_accuracy'] - self.stats['test_accuracy']) * 100
+        self.stats['ann_improvement_percentage'] = float(improvement)
+        
+        if improvement >= 12:
+            print(f"\n✅ SUCCESS! ANN shows {improvement:.1f}% improvement over OLS!")
+            print(f"   Target: >12% improvement")
+        else:
+            print(f"\n⚠️  ANN improvement ({improvement:.1f}%) is below 12% target")
+        
+        return ann_stats
+    
+    def save_model(self):
+        """
+        Save the trained model and statistics.
+        """
+        print("\n" + "="*60)
+        print("STEP 6: SAVING MODEL")
+        print("="*60)
+        
+        # Save model in pickle format
+        model_path = self.model_dir / 'currentOlsSolution.pkl'
+        with open(model_path, 'wb') as f:
+            pickle.dump(self.model, f)
+        print(f"\n💾 Model saved to: {model_path}")
+        
+        # Save model size info
+        model_size_mb = model_path.stat().st_size / (1024 * 1024)
+        self.stats['model_size_mb'] = float(model_size_mb)
+        print(f"   Model size: {model_size_mb:.2f} MB")
+        
+        # Save statistics
+        stats_path = self.model_dir / 'ols_training_stats.json'
+        with open(stats_path, 'w') as f:
+            json.dump(self.stats, f, indent=2)
+        print(f"\n💾 Statistics saved to: {stats_path}")
+        
+        print(f"\n✅ Model artifacts saved successfully!")
+    
+    def run(self):
+        """
+        Execute complete training pipeline.
+        """
+        print("="*60)
+        print("OLS BASELINE MODEL TRAINING - CYBER ATTACK DETECTION")
+        print("Course: M. Grum: Advanced AI-based Application Systems")
+        print("University of Potsdam")
+        print("Author: V (ML Engineer)")
+        print("="*60)
+        
+        # Load data
+        X_train, y_train, X_test, y_test, feature_cols = self.load_data()
+        
+        # Build and train model
+        self.build_and_train_model(X_train, y_train)
+        
+        # Evaluate model
+        eval_results = self.evaluate_model(X_test, y_test)
+        
+        # Create diagnostic plots
+        self.create_diagnostic_plots(X_test, eval_results)
+        
+        # Compare with ANN
+        self.compare_with_ann()
+        
+        # Save model
+        self.save_model()
+        
+        # Final summary
+        print("\n" + "="*60)
+        print("✅ OLS TRAINING COMPLETE!")
+        print("="*60)
+        print(f"\n📊 Final Performance:")
+        print(f"   Test Accuracy: {self.stats['test_accuracy']:.4f} ({self.stats['test_accuracy']*100:.2f}%)")
+        print(f"   Test Precision: {self.stats['test_precision']:.4f}")
+        print(f"   Test Recall: {self.stats['test_recall']:.4f}")
+        print(f"   Test F1-Score: {self.stats['test_f1']:.4f}")
+        
+        if self.model_type == 'binary' and 'roc_auc' in self.stats:
+            print(f"   ROC-AUC: {self.stats['roc_auc']:.4f}")
+        
+        print(f"\n⏱️  Training Time: {self.stats['training_time_seconds']:.2f} seconds")
+        
+        if 'ann_improvement_percentage' in self.stats:
+            print(f"\n📈 ANN Improvement: +{self.stats['ann_improvement_percentage']:.1f}% over OLS")
+        
+        print(f"\n📁 Output Files:")
+        print(f"   Model: {self.model_dir / 'currentOlsSolution.pkl'}")
+        print(f"   Stats: {self.model_dir / 'ols_training_stats.json'}")
+        print(f"   Visualizations: {self.viz_dir.absolute()}")
+        
+        print(f"\n🎯 NEXT STEP: Create Docker model images (Week 5)")
+        print("="*60)
+        
+        return self.stats
 
-
-def build_ols_model():
-    """
-    Build OLS (Logistic Regression) model.
-    
-    Model Configuration (planned):
-    - Algorithm: Logistic Regression
-    - Solver: lbfgs
-    - Max iterations: 1000
-    - Multi-class strategy: ovr (one-vs-rest)
-    
-    Why OLS Baseline:
-    - Faster training than neural networks
-    - More interpretable coefficients
-    - Good benchmark for comparing ANN performance
-    - Shows improvement of deep learning over traditional methods
-    
-    TODO: Implement in Week 4 (Subgoal 5)
-    """
-    print("\n📊 Building OLS baseline model...")
-    print("   [TEMPLATE] Full implementation in Subgoal 5")
-    
-    # Placeholder for model configuration
-    model_config = {
-        'algorithm': 'Logistic Regression',
-        'solver': 'lbfgs',
-        'max_iter': 1000,
-        'multi_class': 'ovr',
-        'random_state': 42,
-        'n_jobs': -1  # Use all CPU cores
-    }
-    
-    return model_config
-
-
-def train_ols_model(model_config, training_data):
-    """
-    Train the OLS baseline model.
-    
-    Expected Performance:
-    - Binary Classification: 75-82% accuracy
-    - Training Time: <1 minute (much faster than ANN)
-    - Interpretability: High (can inspect coefficients)
-    
-    TODO: Implement in Week 4 (Subgoal 5)
-    """
-    print("\n🏋️  Training OLS baseline...")
-    print("   [TEMPLATE] Full implementation in Subgoal 5")
-    
-    # Placeholder training info
-    training_info = {
-        'training_time': '<1 minute',
-        'model_size': '~500 KB',
-        'interpretability': 'High'
-    }
-    
-    print(f"   Training info: {training_info}")
-    return None
-
-
-def evaluate_ols_model():
-    """
-    Evaluate OLS model performance.
-    
-    Expected Metrics (Binary Classification):
-    - Accuracy: 75-82%
-    - Precision: 70-78%
-    - Recall: 72-80%
-    - F1-Score: 0.71-0.79
-    
-    Comparison with ANN:
-    - ANN should outperform by 12-16%
-    - This validates the use of deep learning
-    
-    TODO: Implement in Week 4 (Subgoal 5)
-    """
-    print("\n📊 Evaluating OLS baseline...")
-    print("   [TEMPLATE] Full implementation in Subgoal 5")
-    
-    # Expected metrics
-    expected_metrics = {
-        'accuracy': '75-82%',
-        'precision': '70-78%',
-        'recall': '72-80%',
-        'f1_score': '0.71-0.79',
-        'expected_ann_improvement': '+12-16%'
-    }
-    
-    print(f"   Expected metrics: {expected_metrics}")
-    return expected_metrics
-
-
-def create_diagnostic_plots():
-    """
-    Create OLS diagnostic plots:
-    1. Residual plot (check homoscedasticity)
-    2. Q-Q plot (check normality of residuals)
-    3. Scatter plot (predicted vs actual)
-    4. Feature importance/coefficients
-    
-    TODO: Implement in Week 4 (Subgoal 5)
-    """
-    print("\n📈 Creating diagnostic plots...")
-    print("   [TEMPLATE] Full implementation in Subgoal 5")
-    
-    plots_planned = [
-        'Residual Plot',
-        'Q-Q Plot',
-        'Predicted vs Actual Scatter',
-        'Feature Coefficients'
-    ]
-    
-    print(f"   Planned plots: {plots_planned}")
-    return plots_planned
-
-
-def compare_with_ann():
-    """
-    Compare OLS performance with ANN.
-    
-    Comparison Metrics:
-    - Accuracy difference
-    - Training time difference
-    - Model size difference
-    - Interpretability trade-off
-    
-    TODO: Implement in Week 4-5 (After both models trained)
-    """
-    print("\n🔬 ANN vs OLS Comparison...")
-    print("   [TEMPLATE] Full implementation after both models trained")
-    
-    comparison_framework = {
-        'metrics': ['Accuracy', 'Precision', 'Recall', 'F1'],
-        'training_time': ['OLS: <1 min', 'ANN: 10-15 min'],
-        'model_size': ['OLS: 500 KB', 'ANN: 2-3 MB'],
-        'interpretability': ['OLS: High', 'ANN: Low']
-    }
-    
-    print(f"   Comparison framework: {comparison_framework}")
-    return comparison_framework
 
 def main():
-    """
-    Main OLS training pipeline.
-    """
-    print("="*60)
-    print("OLS BASELINE MODEL TRAINING (TEMPLATE)")
-    print("Course: M. Grum: Advanced AI-based Application Systems")
-    print("University of Potsdam")
-    print("Created by: V (Team Member 2)")
-    print("="*60)
+    """Main entry point."""
+    # Train binary classifier (normal vs attack)
+    print("Training OLS Baseline (Normal vs Attack)...\n")
     
-    print("\n⚠️  This is a TEMPLATE for Subgoal 1 (Git Setup)")
-    print("   Full implementation will be done in Subgoal 5 (Week 4)")
-    print("   Current focus: Establishing project structure\n")
+    trainer = CyberAttackOLS(model_type='binary')
+    stats = trainer.run()
     
-    # Load data (this will work if preprocessing is complete)
-    training_data = load_training_data()
-    
-    if training_data is not None:
-        # Build model configuration
-        model_config = build_ols_model()
-        
-        # Train model (placeholder)
-        trained_model = train_ols_model(model_config, training_data)
-        
-        # Evaluate model (placeholder)
-        metrics = evaluate_ols_model()
-        
-        # Create diagnostic plots (placeholder)
-        plots = create_diagnostic_plots()
-        
-        # Compare with ANN (placeholder)
-        comparison = compare_with_ann()
-    
-    print("\n" + "="*60)
-    print("TEMPLATE SCRIPT COMPLETE")
-    print("This establishes OLS baseline framework for Week 4")
-    print("="*60)
+    return stats
 
 
 if __name__ == "__main__":
     main()
+    

@@ -1,0 +1,16 @@
+{
+  "model_type": "binary",
+  "start_time": "2026-01-06T22:07:14.579867",
+  "end_time": "2026-01-06T22:08:45.440655",
+  "training_time_seconds": 90.860788,
+  "epochs_trained": 50,
+  "best_epoch": 50,
+  "train_accuracy": 0.9841346740722656,
+  "val_accuracy": 0.9886378049850464,
+  "test_accuracy": 0.9872071101535147,
+  "test_precision": 0.9884839547784565,
+  "test_recall": 0.9848877072692926,
+  "test_f1": 0.9866825541459311,
+  "roc_auc": 0.9991049733670931,
+  "model_size_mb": 0.0858612060546875
+}
