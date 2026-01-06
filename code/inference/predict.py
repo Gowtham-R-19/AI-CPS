@@ -242,7 +242,6 @@ def main(model_type='ann'):
     print(f"To test OLS: python predict.py --model ols")
     print("="*60)
 
-
 if __name__ == "__main__":
     import argparse
     
@@ -253,4 +252,6 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     main(model_type=args.model)
-    
+
+
+

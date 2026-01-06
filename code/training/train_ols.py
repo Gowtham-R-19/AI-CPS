@@ -175,7 +175,6 @@ def compare_with_ann():
     print(f"   Comparison framework: {comparison_framework}")
     return comparison_framework
 
-
 def main():
     """
     Main OLS training pipeline.
