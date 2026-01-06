@@ -49,26 +49,26 @@ Progress Bar: [██░░░░░░░░░░░░░░░░░░] 10%
 ### Week 1 Remaining Tasks
 
 #### Day 2-3: Setup Continuation
-- [ ] **V:** Install all dependencies from requirements.txt
-- [ ] **V:** Test Python environment
-- [ ] **V:** Create OLS baseline script template
-- [ ] **V:** Create inference script template
-- [ ] **V:** Make commit (Commit 1/3 for V)
-- [ ] **G:** Test scraping script (dry run)
-- [ ] **G:** Document scraping methodology
-- [ ] **Both:** Review commit history together
+- [x] **V:** Install all dependencies from requirements.txt
+- [x] **V:** Test Python environment
+- [x] **V:** Create OLS baseline script template
+- [x] **V:** Create inference script template
+- [x] **V:** Make commit (Commit 1/3 for V)
+- [x] **G:** Test scraping script (dry run)
+- [x] **G:** Document scraping methodology
+- [x] **Both:** Review commit history together
 
 ---
 
 ## ⏳ Upcoming Tasks
 
 ### Week 2: Data Scraping & Preparation (Subgoal 2)
-- [ ] Implement web scraping for NSL-KDD
-- [ ] Download dataset files
-- [ ] Implement data cleaning
-- [ ] Implement feature engineering
-- [ ] Create train/test/activation splits
-- [ ] Verify data quality
+- [x] Implement web scraping for NSL-KDD
+- [x] Download dataset files
+- [x] Implement data cleaning
+- [x] Implement feature engineering
+- [x] Create train/test/activation splits
+- [x] Verify data quality
 
 ### Week 3: Docker Data Provision (Subgoal 3)
 - [ ] Create learningBase Dockerfile
