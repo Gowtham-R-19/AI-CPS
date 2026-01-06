@@ -1,10 +1,100 @@
-# ignore ALL .log files
-*.log
-*__pycache__*
-*.pyc
+# Network Intrusion Detection Project - Git Ignore
+# Course: M. Grum: Advanced AI-based Application Systems
 
-# ignore ALL files in ANY directory named temp
-temp/ 
-code/logs
-code/experiments/logs
-code/messageClient/logs
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environment
+venv/
+env/
+ENV/
+venv.bak/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# PyCharm
+.idea/
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# Data Files (DON'T commit large datasets to Git)
+data/raw/*.csv
+data/raw/*.txt
+data/raw/*.arff
+data/processed/*.csv
+!data/processed/activation_data.csv  # Allow small activation file
+
+# Model Files (DON'T commit large model files to Git)
+*.h5
+*.pkl
+*.xml
+*.weights
+*.keras
+models/
+
+# TensorFlow
+*.pb
+saved_model/
+checkpoints/
+
+# Logs
+logs/
+*.log
+*.out
+
+# Operating System
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Docker (local only, images go to Docker Hub)
+*.tar
+*.gz
+
+# Temporary Files
+tmp/
+temp/
+*.tmp
+
+# Secrets (NEVER commit credentials)
+.env
+*.key
+*.pem
+credentials.json
+config_local.py
+
+# Test Coverage
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Documentation Build
+documentation/build/
+*.pdf
+!documentation/Final_Team_Report.pdf  # Allow final report

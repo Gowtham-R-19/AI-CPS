@@ -1,0 +1,44 @@
+# Python Dependencies for Network Intrusion Detection Project
+# Course: M. Grum: Advanced AI-based Application Systems
+# University of Potsdam
+
+# Core Data Science Libraries
+numpy==1.24.3
+pandas==2.0.3
+scipy==1.11.1
+
+# Machine Learning - Neural Networks
+tensorflow==2.13.0
+keras==2.13.1
+
+# Machine Learning - Traditional Models
+scikit-learn==1.3.0
+statsmodels==0.14.0
+
+# Web Scraping
+beautifulsoup4==4.12.2
+requests==2.31.0
+lxml==4.9.3
+
+# Data Visualization
+matplotlib==3.7.2
+seaborn==0.12.2
+
+# File Handling
+Pillow==10.0.0
+h5py==3.9.0
+
+# Utilities
+tqdm==4.66.1
+pyyaml==6.0.1
+
+# Jupyter (for experimentation)
+jupyter==1.0.0
+ipykernel==6.25.0
+
+# Docker Python SDK (optional, for container management)
+docker==6.1.3
+
+# Testing
+pytest==7.4.0
+pytest-cov==4.1.0
