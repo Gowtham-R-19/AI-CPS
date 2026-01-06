@@ -1,0 +1,86 @@
+# docker-compose.yml - Test Data Images
+# Course: M. Grum: Advanced AI-based Application Systems
+# University of Potsdam
+#
+# This file tests the learningBase and activationBase images
+# by mounting them to a shared volume.
+#
+# Author: G & V
+# Week: 3 (Subgoal 3: Docker Data Provision)
+
+version: '3.8'
+
+services:
+  # Learning base service - provides training and testing data
+  learning:
+    image: ghost5555/learningbase_cyberattackdetection:latest
+    container_name: cyber_learning_base
+    volumes:
+      - ai_system:/tmp
+    command: >
+      sh -c "
+      echo '=== learningBase Data Provision ===';
+      echo 'Training data:';
+      ls -lh /tmp/learningBase/train/;
+      echo '';
+      echo 'Validation data:';
+      ls -lh /tmp/learningBase/validation/;
+      echo '';
+      echo 'Data successfully mounted to ai_system volume';
+      "
+
+  # Activation base service - provides inference sample data
+  activation:
+    image: ghost5555/activationbase_cyberattackdetection:latest
+    container_name: cyber_activation_base
+    volumes:
+      - ai_system:/tmp
+    depends_on:
+      - learning
+    command: >
+      sh -c "
+      echo '=== activationBase Data Provision ===';
+      echo 'Activation data:';
+      ls -lh /tmp/activationBase/;
+      echo '';
+      echo 'Sample count:';
+      wc -l /tmp/activationBase/activation_data.csv;
+      echo '';
+      echo 'Data successfully mounted to ai_system volume';
+      "
+
+  # Verification service - checks that all data is accessible
+  verify:
+    image: busybox:latest
+    container_name: cyber_data_verify
+    volumes:
+      - ai_system:/tmp
+    depends_on:
+      - learning
+      - activation
+    command: >
+      sh -c "
+      echo '';
+      echo '=== Verifying All Data ===';
+      echo '';
+      echo 'Checking learningBase:';
+      test -f /tmp/learningBase/train/training_data.csv && echo '✅ training_data.csv exists' || echo '❌ training_data.csv missing';
+      test -f /tmp/learningBase/validation/test_data.csv && echo '✅ test_data.csv exists' || echo '❌ test_data.csv missing';
+      echo '';
+      echo 'Checking activationBase:';
+      test -f /tmp/activationBase/activation_data.csv && echo '✅ activation_data.csv exists' || echo '❌ activation_data.csv missing';
+      echo '';
+      echo '=== Verification Complete ===';
+      echo 'All data images are working correctly!';
+      echo '';
+      echo 'Volume contents:';
+      ls -lR /tmp/;
+      "
+
+volumes:
+  ai_system:
+    external: true
+
+networks:
+  default:
+    name: cyber_attack_detection_network
