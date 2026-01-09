@@ -26,6 +26,7 @@ services:
       echo 'Validation data:';
       ls -lh /tmp/learningBase/validation/;
       echo '';
+      cp -r /tmp/learningBase/* /tmp/ 2>/dev/null || echo 'Data already in volume';
       echo 'Data successfully mounted to ai_system volume';
       "
 
@@ -34,17 +35,20 @@ services:
     image: ghost5555/activationbase_cyberattackdetection:latest
     container_name: cyber_activation_base
     volumes:
-      - ai_system:/tmp
+      - ai_system:/tmp/shared
     depends_on:
       - learning
     command: >
       sh -c "
       echo '=== activationBase Data Provision ===';
-      echo 'Activation data:';
+      echo 'Activation data in image:';
       ls -lh /tmp/activationBase/;
       echo '';
+      echo 'Copying to shared volume:';
+      cp -r /tmp/activationBase /tmp/shared/;
+      echo '';
       echo 'Sample count:';
-      wc -l /tmp/activationBase/activation_data.csv;
+      wc -l /tmp/shared/activationBase/activation_data.csv;
       echo '';
       echo 'Data successfully mounted to ai_system volume';
       "
@@ -60,6 +64,7 @@ services:
       - activation
     command: >
       sh -c "
+      sleep 2;  # Wait for data to be copied
       echo '';
       echo '=== Verifying All Data ===';
       echo '';
