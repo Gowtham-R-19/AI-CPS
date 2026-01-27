@@ -23,12 +23,25 @@ from tensorflow import keras
 from tensorflow.keras import layers, models
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 
+from sklearn.preprocessing import StandardScaler
+import joblib
+
 from sklearn.metrics import (
     accuracy_score, precision_score, recall_score, f1_score,
     confusion_matrix, classification_report, roc_curve, auc,
-    precision_recall_curve
+   precision_recall_curve
 )
 
+# -----------------------------
+# Reproducibility Controls
+# -----------------------------
+# Fix random behavior across Python, NumPy, and TensorFlow
+# This ensures the same dataset + same code = same results
+import random
+SEED = 42
+random.seed(SEED)
+np.random.seed(SEED)
+tf.random.set_seed(SEED)
 
 class CyberAttackANN:
     """
@@ -51,10 +64,31 @@ class CyberAttackANN:
         self.model_dir = Path(__file__).parent.parent.parent / "models"
         self.viz_dir = Path(__file__).parent.parent.parent / "visualizations"
         
-        # Create directories
+        # # Create directories
+        # self.model_dir.mkdir(parents=True, exist_ok=True)
+        # self.viz_dir.mkdir(parents=True, exist_ok=True)
+
+        # -----------------------------
+        # Create & Bind Run ID (Source of Truth) Added by Gowtham
+        # -----------------------------
+        self.run_id = datetime.now().strftime("run_%Y-%m-%d_%H-%M-%S")
+
+        base_dir = Path(__file__).parent.parent.parent
+
+        self.model_dir = base_dir / "models" / self.run_id / "ann"
+        self.viz_dir = base_dir / "visualizations" / self.run_id / "ann"
+
         self.model_dir.mkdir(parents=True, exist_ok=True)
         self.viz_dir.mkdir(parents=True, exist_ok=True)
-        
+
+        # Write latest run pointer
+        run_id_file = base_dir / "models" / "LATEST_RUN.txt"
+        run_id_file.write_text(self.run_id)
+
+        print(f"🆔 Run ID: {self.run_id}")
+        print(f"📁 ANN model dir: {self.model_dir}")
+        print(f"📁 ANN viz dir: {self.viz_dir}")
+
         # Training statistics
         self.stats = {
             'model_type': model_type,
@@ -96,11 +130,28 @@ class CyberAttackANN:
         
         feature_cols = [col for col in df_train.columns if col not in exclude_cols]
         
-        X_train = df_train[feature_cols].values
+        # X_train = df_train[feature_cols].values
+        # y_train = df_train[label_col].values
+        # 
+        # X_test = df_test[feature_cols].values
+        # y_test = df_test[label_col].values
+
+        # -----------------------------
+        # Feature Scaling
+        # -----------------------------
+        scaler = StandardScaler()
+
+        X_train = scaler.fit_transform(df_train[feature_cols].values)
         y_train = df_train[label_col].values
-        
-        X_test = df_test[feature_cols].values
+
+        X_test = scaler.transform(df_test[feature_cols].values)
         y_test = df_test[label_col].values
+
+        # Save scaler for inference
+        scaler_path = self.model_dir / "scaler.pkl"
+        joblib.dump(scaler, scaler_path)
+
+        print(f"💾 Feature scaler saved to: {scaler_path}")
         
         print(f"\n📊 Data shapes:")
         print(f"   X_train: {X_train.shape}")
@@ -332,6 +383,14 @@ class CyberAttackANN:
             print(f"    - Increasing epochs")
             print(f"    - Adding more hidden layers")
             print(f"    - Adjusting learning rate")
+
+        # -----------------------------
+        # Save Predictions for OLS Statistical Testing (Added by Gowtham)
+        # -----------------------------
+        preds_path = self.model_dir / "ann_predictions.npy"
+        np.save(preds_path, y_pred)
+
+        print(f"💾 ANN predictions saved to: {preds_path}")
         
         return {
             'y_true': y_test,
@@ -480,7 +539,52 @@ class CyberAttackANN:
         print(f"\n💾 Statistics saved to: {stats_path}")
         
         print(f"\n✅ Model artifacts saved successfully!")
+
+    def calibrate_temperature(self, X_calib, y_calib):
+        """
+        Learn temperature parameter for probability calibration
+        using logit reconstruction (stable & architecture-safe).
+        """
+        print("\n" + "=" * 60)
+        print("STEP 7: CALIBRATING CONFIDENCE (TEMPERATURE SCALING)")
+        print("=" * 60)
     
+        # Get predicted probabilities
+        probs = self.model.predict(X_calib, verbose=0).flatten()
+    
+        # Numerical safety
+        eps = 1e-7
+        probs = np.clip(probs, eps, 1 - eps)
+    
+        # Convert probabilities → logits
+        logits = np.log(probs / (1 - probs))
+    
+        T = tf.Variable(1.0, dtype=tf.float32)
+    
+        def nll():
+            scaled_logits = logits / T
+            scaled_probs = tf.sigmoid(scaled_logits)
+            return tf.reduce_mean(
+                tf.keras.losses.binary_crossentropy(y_calib, scaled_probs)
+            )
+    
+        optimizer = tf.keras.optimizers.Adam(learning_rate=0.05)
+    
+        for _ in range(200):
+            optimizer.minimize(nll, var_list=[T])
+    
+        temperature = float(T.numpy())
+    
+        # Save temperature
+        temp_path = self.model_dir / "temperature.json"
+        with open(temp_path, "w") as f:
+            json.dump({"temperature": temperature}, f, indent=2)
+    
+        print(f"🌡️  Temperature learned: {temperature:.4f}")
+        print(f"💾 Saved to: {temp_path}")
+    
+        return temperature
+
     def run(self):
         """
         Execute complete training pipeline.
@@ -505,6 +609,15 @@ class CyberAttackANN:
         
         # Train model
         self.train_model(X_train, y_train, X_test, y_test)
+
+        # -----------------------------
+        # Temperature Calibration (NEW) Added by Gowtham
+        # -----------------------------
+        calib_size = int(0.2 * len(X_test))
+        X_calib = X_test[:calib_size]
+        y_calib = y_test[:calib_size]
+
+        self.calibrate_temperature(X_calib, y_calib)
         
         # Evaluate model
         eval_results = self.evaluate_model(X_test, y_test)
