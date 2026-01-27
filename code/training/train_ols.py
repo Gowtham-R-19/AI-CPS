@@ -9,6 +9,15 @@ Expected accuracy: 75-82% (showing ANN improvement of 12-16%)
 Author: V (Team Lead - ML Engineer)
 Week: 4 (Subgoal 5: OLS Model Creation)
 """
+# ==========================================================
+# ⚖️ BASELINE GOVERNANCE NOTICE
+# This OLS model serves as a scientific baseline for ANN
+# performance comparison. It must:
+# 1. Use the same feature scaling as ANN (scaler.pkl)
+# 2. Be evaluated on a leakage-free dataset
+#    (python code/training/check_overlap.py → Overlap = 0)
+# 3. Be reported with statistical significance where possible
+# ==========================================================
 
 import pandas as pd
 import numpy as np
@@ -44,8 +53,27 @@ class CyberAttackOLS:
         
         # Paths
         self.data_dir = Path(__file__).parent.parent.parent / "data" / "processed"
-        self.model_dir = Path(__file__).parent.parent.parent / "models"
-        self.viz_dir = Path(__file__).parent.parent.parent / "visualizations"
+        #self.model_dir = Path(__file__).parent.parent.parent / "models"
+        #self.viz_dir = Path(__file__).parent.parent.parent / "visualizations"
+
+        # -----------------------------
+        # Link OLS to Latest ANN Run (Source of Truth) Added by Gowtham
+        # -----------------------------
+        base_dir = Path(__file__).parent.parent.parent
+
+        run_id_file = base_dir / "models" / "LATEST_RUN.txt"
+        if not run_id_file.exists():
+            raise RuntimeError("❌ LATEST_RUN.txt not found. Train ANN first.")
+
+        run_id = run_id_file.read_text().strip()
+
+        self.model_dir = base_dir / "models" / run_id / "ols"
+        self.viz_dir = base_dir / "visualizations" / run_id / "ols"
+
+        self.model_dir.mkdir(parents=True, exist_ok=True)
+        self.viz_dir.mkdir(parents=True, exist_ok=True)
+
+        print(f"📁 OLS linked to ANN run: {run_id}")
         
         # Create directories
         self.model_dir.mkdir(parents=True, exist_ok=True)
@@ -88,10 +116,30 @@ class CyberAttackOLS:
         
         feature_cols = [col for col in df_train.columns if col not in exclude_cols]
         
-        X_train = df_train[feature_cols].values
+        # X_train = df_train[feature_cols].values
+        # y_train = df_train[label_col].values
+        # 
+        # X_test = df_test[feature_cols].values
+        # y_test = df_test[label_col].values
+
+        # -----------------------------
+        # Feature Scaling (Fair Comparison with ANN) Updated Version 
+        # -----------------------------
+        scaler_path = self.model_dir.parent / "ann" / "scaler.pkl" # Path to ANN scaler
+
+        if scaler_path.exists():
+            print(f"🔧 Loading scaler from ANN run: {scaler_path}")
+            import joblib
+            scaler = joblib.load(scaler_path)
+
+            X_train = scaler.transform(df_train[feature_cols].values)
+            X_test = scaler.transform(df_test[feature_cols].values)
+        else:
+            print("⚠️  No scaler found. Using raw features (comparison may be biased).")
+            X_train = df_train[feature_cols].values
+            X_test = df_test[feature_cols].values
+
         y_train = df_train[label_col].values
-        
-        X_test = df_test[feature_cols].values
         y_test = df_test[label_col].values
         
         print(f"\n📊 Data shapes:")
@@ -341,7 +389,7 @@ class CyberAttackOLS:
         print("="*60)
         
         # Load ANN stats if available
-        ann_stats_file = self.model_dir / 'ann_training_stats.json'
+        ann_stats_file = self.model_dir.parent / "ann" / "ann_training_stats.json" # Path to ANN stats
         
         if not ann_stats_file.exists():
             print("\n⚠️  ANN statistics not found. Train ANN first:")
@@ -417,6 +465,43 @@ class CyberAttackOLS:
             print(f"   Target: >12% improvement")
         else:
             print(f"\n⚠️  ANN improvement ({improvement:.1f}%) is below 12% target")
+
+        # -----------------------------
+        # Statistical Significance Test (McNemar’s Test) Code Added by Gowtham
+        # -----------------------------
+        print("\n📐 Statistical Significance Test (McNemar’s Test)")
+        print("   (Evaluates if ANN improvement is statistically significant)")
+
+        try:
+            # Reload test data
+            _, _, X_test, y_test, _ = self.load_data()
+
+            ann_preds_path = self.model_dir / "ann_predictions.npy"
+
+            if ann_preds_path.exists():
+                ann_preds = np.load(ann_preds_path)
+                ols_preds = self.model.predict(X_test)
+
+                # Contingency values
+                both_correct = np.sum((ann_preds == y_test) & (ols_preds == y_test))
+                ann_correct_ols_wrong = np.sum((ann_preds == y_test) & (ols_preds != y_test))
+                ann_wrong_ols_correct = np.sum((ann_preds != y_test) & (ols_preds == y_test))
+                both_wrong = np.sum((ann_preds != y_test) & (ols_preds != y_test))
+
+                table = [[both_correct, ann_correct_ols_wrong],
+                         [ann_wrong_ols_correct, both_wrong]]
+
+                chi2, p = stats.mcnemar(table, exact=False, correction=True)
+
+                print(f"   p-value: {p:.6f}")
+                if p < 0.05:
+                    print("   ✅ ANN improvement is statistically significant (p < 0.05)")
+                else:
+                    print("   ⚠️  ANN improvement is NOT statistically significant")
+            else:
+                print("⚠️  ANN predictions not found. Skipping significance test.")
+        except Exception as e:
+            print(f"⚠️  Could not perform statistical test: {e}")
         
         return ann_stats
     
