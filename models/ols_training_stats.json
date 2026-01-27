@@ -1,13 +1,13 @@
 {
   "model_type": "binary",
-  "start_time": "2026-01-06T22:09:07.263837",
-  "end_time": "2026-01-06T22:09:21.973177",
-  "training_time_seconds": 14.70934,
+  "start_time": "2026-01-07T15:14:58.191833",
+  "end_time": "2026-01-07T15:15:18.383051",
+  "training_time_seconds": 20.191218,
   "test_accuracy": 0.9368771882574738,
   "test_precision": 0.9510387912247567,
   "test_recall": 0.9159728538445393,
   "test_f1": 0.9331765209023842,
   "roc_auc": 0.9816613357179403,
-  "ann_improvement_percentage": 5.032992189604091,
+  "ann_improvement_percentage": 4.928629140856444,
   "model_size_mb": 0.0009965896606445312
 }
