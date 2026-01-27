@@ -1,0 +1,64 @@
+# docker-compose.yml - ANN Inference Pipeline
+# Course: M. Grum: Advanced AI-based Application Systems
+# University of Potsdam
+#
+# This composition demonstrates the complete ANN-based intrusion detection system.
+# It orchestrates all four Docker images to perform end-to-end inference.
+#
+# Authors: G & V
+# Week: 6 (Subgoal 7: Docker Compose Integration)
+
+version: '3.8'
+
+services:
+  knowledge:
+    image: vaishnavivijaya2002/knowledgebase_cyberattackdetection:latest
+    container_name: cyber_knowledge_base
+    volumes:
+      - ai_system:/tmp
+    command: >
+      sh -c "
+      echo '=== Knowledge Base Provision ===';
+      echo 'Trained models:';
+      ls -lh /tmp/knowledgeBase;
+      cp -r /tmp/knowledgeBase /tmp/;
+      echo 'Models successfully mounted to ai_system volume';
+      echo 'Knowledge base ready';
+      "
+
+  activation:
+    image: ghost5555/activationbase_cyberattackdetection:latest
+    container_name: cyber_activation_base
+    volumes:
+      - ai_system:/tmp/shared
+    depends_on:
+      - knowledge
+    command: >
+      sh -c "
+      echo '=== Activation Base Provision ===';
+      echo 'Sample data:';
+      ls -lh /tmp/activationBase;
+      cp -r /tmp/activationBase /tmp/shared/;
+      wc -l /tmp/shared/activationBase/activation_data.csv;
+      echo '';
+      echo 'Activation data ready';
+      "
+
+  inference_ann:
+    image: vaishnavivijaya2002/codebase_cyberattackdetection:latest
+    container_name: cyber_ann_inference
+    volumes:
+      - ai_system:/tmp
+    depends_on:
+      - activation
+    command: ["--model", "ann"]
+    environment:
+      - TF_CPP_MIN_LOG_LEVEL=2  # Reduce TensorFlow logging
+
+volumes:
+  ai_system:
+    external: true
+
+networks:
+  default:
+    name: cyber_attack_detection_network_ann

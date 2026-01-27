@@ -1,0 +1,65 @@
+# docker-compose.yml - OLS Baseline Inference Pipeline
+# Course: M. Grum: Advanced AI-based Application Systems
+# University of Potsdam
+#
+# This composition demonstrates the OLS baseline intrusion detection system.
+# It uses the same infrastructure but with the logistic regression model.
+#
+# Authors: G & V
+# Week: 6 (Subgoal 7: Docker Compose Integration)
+
+version: "3.8"
+
+services:
+  # Knowledge base - provides trained ANN & OLS models
+  knowledge:
+    image: vaishnavivijaya2002/knowledgebase_cyberattackdetection:latest
+    container_name: cyber_knowledge_base_ols
+    volumes:
+      - ai_system:/tmp
+    command: >
+      sh -c "
+      echo '=== Knowledge Base Provision ===';
+      echo 'Trained models:';
+      ls -lh /tmp/knowledgeBase;
+      echo '';
+      echo 'Knowledge base ready';
+      "
+
+  # Activation base - provides sample data for inference
+  activation:
+    image: ghost5555/activationbase_cyberattackdetection:latest
+    container_name: cyber_activation_base_ols
+    volumes:
+      - ai_system:/tmp/shared
+    depends_on:
+      - knowledge
+    command: >
+      sh -c "
+      echo '=== Activation Base Provision ===';
+      echo 'Sample data:';
+      ls -lh /tmp/activationBase;
+      cp -r /tmp/activationBase /tmp/shared/ 2>/dev/null || echo 'Already copied';
+      wc -l /tmp/shared/activationBase/activation_data.csv;
+      echo '';
+      echo 'Activation data ready';
+      "
+
+   # Inference engine - runs OLS model on activation data
+  inference_ols:
+    image: vaishnavivijaya2002/codebase_cyberattackdetection:latest
+    container_name: cyber_ols_inference
+    volumes:
+      - ai_system:/tmp
+    depends_on:
+      - knowledge
+      - activation
+    command: ["--model", "ols"]
+    
+volumes:
+  ai_system:
+    external: true
+
+networks:
+  default:
+    name: cyber_attack_detection_network_ols
