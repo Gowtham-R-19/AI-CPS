@@ -19,6 +19,7 @@ Week: 4 (Subgoal 5: OLS Model Creation)
 # 3. Be reported with statistical significance where possible
 # ==========================================================
 
+from unittest import result
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -34,6 +35,7 @@ from sklearn.metrics import (
     confusion_matrix, classification_report, roc_curve, auc
 )
 import scipy.stats as stats
+from statsmodels.stats.contingency_tables import mcnemar
 
 
 class CyberAttackOLS:
@@ -66,7 +68,8 @@ class CyberAttackOLS:
             raise RuntimeError("❌ LATEST_RUN.txt not found. Train ANN first.")
 
         run_id = run_id_file.read_text().strip()
-
+        
+        self.ann_dir = base_dir / "models" / run_id / "ann" # Path to ANN model directory
         self.model_dir = base_dir / "models" / run_id / "ols"
         self.viz_dir = base_dir / "visualizations" / run_id / "ols"
 
@@ -389,6 +392,7 @@ class CyberAttackOLS:
         print("="*60)
         
         # Load ANN stats if available
+        
         ann_stats_file = self.model_dir.parent / "ann" / "ann_training_stats.json" # Path to ANN stats
         
         if not ann_stats_file.exists():
@@ -476,7 +480,7 @@ class CyberAttackOLS:
             # Reload test data
             _, _, X_test, y_test, _ = self.load_data()
 
-            ann_preds_path = self.model_dir / "ann_predictions.npy"
+            ann_preds_path = self.ann_dir / "ann_predictions.npy" # Path to ANN predictions
 
             if ann_preds_path.exists():
                 ann_preds = np.load(ann_preds_path)
@@ -491,10 +495,12 @@ class CyberAttackOLS:
                 table = [[both_correct, ann_correct_ols_wrong],
                          [ann_wrong_ols_correct, both_wrong]]
 
-                chi2, p = stats.mcnemar(table, exact=False, correction=True)
+                result = mcnemar(table, exact=False, correction=True)
 
-                print(f"   p-value: {p:.6f}")
-                if p < 0.05:
+                print(f"   chi² statistic: {result.statistic:.4f}")
+                print(f"   p-value: {result.pvalue:.6f}")
+
+                if result.pvalue < 0.05:
                     print("   ✅ ANN improvement is statistically significant (p < 0.05)")
                 else:
                     print("   ⚠️  ANN improvement is NOT statistically significant")
