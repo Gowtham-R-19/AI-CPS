@@ -9,7 +9,7 @@
 # Author: G (Data Engineer)
 # Week: 3 (Subgoal 3: Docker Data Provision)
 
-FROM busybox:latest
+FROM busybox:latest  
 
 # Create directory structure
 RUN mkdir -p /tmp/activationBase
