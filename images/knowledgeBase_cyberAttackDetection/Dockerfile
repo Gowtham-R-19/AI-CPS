@@ -10,20 +10,17 @@
 # Author: V (ML Engineer)
 # Week: 5 (Subgoal 6: Docker Model Provision)
 
+# knowledgeBase_cyberAttackDetection Dockerfile
+
 FROM busybox:latest
 
-# Create directory structure
-RUN mkdir -p /tmp/knowledgeBase
+# Store models OUTSIDE /tmp
+RUN mkdir -p /models
 
-# Copy trained models
-COPY currentAiSolution.h5 /tmp/knowledgeBase/currentAiSolution.h5
-COPY currentOlsSolution.pkl /tmp/knowledgeBase/currentOlsSolution.pkl
+COPY currentAiSolution.h5 /models/currentAiSolution.h5
+COPY currentOlsSolution.pkl /models/currentOlsSolution.pkl
+COPY scaler.pkl /models/scaler.pkl
+COPY README.md /models/README.md
 
-# Copy README
-COPY README.md /tmp/knowledgeBase/README.md
-
-# Set working directory
-WORKDIR /tmp/knowledgeBase
-
-# Default command - show contents
-CMD ["ls", "-lh", "/tmp/knowledgeBase"]
+# When container starts, copy models INTO /tmp (volume-mounted)
+CMD ["sh", "-c", "mkdir -p /tmp/knowledgeBase && cp /models/* /tmp/knowledgeBase/ && ls -lh /tmp/knowledgeBase"]
