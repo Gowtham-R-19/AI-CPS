@@ -5,13 +5,13 @@
 ---
 
 ## Image Information
-- **Author:** Vaishnavi Vijaya
-- **Course:** M. Grum — Advanced AI-based Application Systems
-- **Institution:** University of Potsdam
+- **Course:** M. Grum – Advanced AI-based Application Systems - Data Science and Business Analytics
+- **Instructor:** Prof. Dr. Marcus Grum  
+- **Chair:** Junior Chair for Business Information Science, especially AI-based Application Systems  
+- **Institution:** University of Potsdam, Germany  
+- **Authors:**   Vaishnavi Vijaya
 - **Purpose:** Provide inference scripts that run ANN or OLS models against activation data
 - **License:** AGPL-3.0
-- **Location in repo:** `images/codeBase_cyberAttackDetection/`
-
 ---
 
 ## 📌 Overview
@@ -106,9 +106,14 @@ volumes:
 ---
 
 ## ⚖️ License & usage
-Licensed under **AGPL-3.0**.
 
-**Academic use only** — developed as part of the Advanced AI-based Application Systems coursework at University of Potsdam.
+```
+Licensed under the AGPL-3.0 license.
+- Developed strictly for academic and educational purposes
+- Part of the Advanced AI-based Application Systems (AIBAS) coursework
+- Not intended for production deployment
+- University of Potsdam · AIBAS Coursework 
+```
 
 
  
