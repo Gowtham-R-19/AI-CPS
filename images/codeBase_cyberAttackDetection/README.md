@@ -6,7 +6,7 @@
 
 ## ✅ Quick facts
 - **Author:** Vaishnavi Vijaya
-- **Course:** M. Grum — Advanced AI-based Application Systems
+- **Course:** Marcus Grum — Advanced AI-based Application Systems
 - **Institution:** University of Potsdam
 - **Purpose:** Provide inference scripts that run ANN or OLS models against activation data
 - **License:** AGPL-3.0
