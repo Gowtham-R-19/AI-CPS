@@ -1,16 +1,27 @@
-# knowledgeBase_cyberAttackDetection Dockerfile
-# Course: M. Grum: Advanced AI-based Application Systems
-# University of Potsdam
+# ==============================================================================
+# Title: Knowledge Base Image — Cyber Attack Detection (Trained Model Provision)
 #
-# This image provides trained models for cyber attack detection.
-# It contains:
-# - currentAiSolution.h5 (ANN model - 95% accuracy)
-# - currentOlsSolution.pkl (OLS baseline - 78% accuracy)
+# Course: M. Grum – Advanced AI-based Application Systems
+# Track: Data Science and Business Analytics
+# Instructor: Prof. Dr. Marcus Grum
+# Chair: Junior Chair for Business Information Science, especially AI-based Application Systems
+# Institution: University of Potsdam, Germany
+# Author: Vaishnavi Vijaya
 #
-# Author: V (ML Engineer)
-# Week: 5 (Subgoal 6: Docker Model Provision)
-
-# knowledgeBase_cyberAttackDetection Dockerfile
+# Description:
+# This Docker image provisions trained cyber attack detection model artifacts,
+# including an ANN model, an OLS baseline model, and the associated feature
+# scaler. Models are stored in a read-only internal directory and copied into a
+# runtime-accessible path on container startup to support deterministic and
+# reproducible model loading within inference pipelines.
+#
+# Key Design Principles:
+# - Controlled provisioning of trained model artifacts
+# - Deterministic startup-time model exposure to runtime volumes
+# - Clear separation between internal storage and execution paths
+# - Seamless integration with containerized inference workflows
+#
+# ==============================================================================
 
 FROM busybox:latest
 
