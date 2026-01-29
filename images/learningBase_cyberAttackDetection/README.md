@@ -2,9 +2,11 @@
 
 ## Image Information
 
-- **Author:** Gowtham Ramakrishna
-- **Course:** M. Grum: Advanced AI-based Application Systems
-- **Institution:** Junior Chair for Business Information Science, esp. AI-based Application Systems, University of Potsdam
+- **Course:** M. Grum – Advanced AI-based Application Systems - Data Science and Business Analytics
+- **Instructor:** Prof. Dr. Marcus Grum  
+- **Chair:** Junior Chair for Business Information Science, especially AI-based Application Systems  
+- **Institution:** University of Potsdam, Germany  
+- **Authors:**   Gowtham Ramakrishna
 - **Purpose:** Provide datasets required for model training and testing
 - **License:** AGPL-3.0
 
@@ -64,9 +66,10 @@ This image contains data only and performs no computation.
 
 ## License & Attribution
 
+```
 Licensed under the AGPL-3.0 license.
-
 - Developed strictly for academic and educational purposes
 - Part of the Advanced AI-based Application Systems (AIBAS) coursework
 - Not intended for production deployment
-- University of Potsdam · AIBAS Coursework
+- University of Potsdam · AIBAS Coursework 
+```
