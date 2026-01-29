@@ -1,269 +1,210 @@
-# 🔒 Network Intrusion Detection Using Artificial Neural Networks
+# 🔐 Cyber Attack Detection System using ANN and OLS
 
-**Master's Thesis Project**  
-**Course:** M. Grum: Advanced AI-based Application Systems  
-**Institution:** Junior Chair for Business Information Science, esp. AI-based Application Systems, University of Potsdam  
-**Team Members:** G & V  
-**Academic Year:** 2025-2026
+**Course:** M. Grum – Advanced AI-based Application Systems (AIBAS)  
+**Instructor:** Prof. Dr. Martin Grum  
+**Chair:** Junior Chair for Business Information Science,  
+especially AI-based Application Systems  
+**Institution:** University of Potsdam, Germany  
 
----
-
-## 📋 Project Overview
-
-This project implements an AI-based Network Intrusion Detection System (IDS) using Artificial Neural Networks (ANN) to detect cyber attacks with >90% accuracy. The system analyzes network traffic patterns to classify connections as normal or malicious (DoS, Probe, R2L, U2R).
-
-**Expected Accuracy:** 92-98% (Binary Classification)  
-**Dataset:** NSL-KDD (148,517 records, 41 features)  
-**License:** AGPL-3.0
+**Authors:**  
+- **Gowtham Ramakrishna**  
+- **Vaishnavi Vijaya**
 
 ---
 
-## 🎯 Project Objectives
+## 📌 Project Overview
 
-1. **Primary Goal:** Build an AI system that detects network intrusions with >90% accuracy
-2. **Secondary Goals:**
-   - Compare ANN performance vs OLS baseline
-   - Analyze feature importance in attack detection
-   - Visualize attack patterns
-   - Deploy via Docker containers
+This project presents an AI-based **Cyber Attack Detection System** developed as part of the coursework for *Advanced AI-based Application Systems (AIBAS)* at the University of Potsdam.
 
----
+The system applies **Artificial Neural Networks (ANN)** as a non-linear classifier and **Ordinary Least Squares (OLS)** as a linear baseline to detect malicious network traffic. The project emphasizes **reproducibility, data integrity, structured experimentation, and deployable system design**.
 
-## 🗂 Repository Structure
-
-```
-AI-CPS/
-├── code/                          # All source code
-│   ├── scraping/                 # Web scraping scripts
-│   ├── preprocessing/            # Data cleaning and preparation
-│   ├── training/                 # Model training scripts
-│   └── inference/                # Model inference scripts
-├── data/                          # All datasets
-│   ├── raw/                      # Original scraped data
-│   └── processed/                # Cleaned and split data
-│       ├── joint_data_collection.csv
-│       ├── training_data.csv
-│       ├── test_data.csv
-│       └── activation_data.csv
-├── documentation/                 # Project documentation
-│   └── Final_Team_Report.pdf
-├── images/                        # Docker images
-│   ├── learningBase_cyberAttackDetection/
-│   ├── activationBase_cyberAttackDetection/
-│   ├── knowledgeBase_cyberAttackDetection/
-│   └── codeBase_cyberAttackDetection/
-└── scenarios/                     # Docker compose files
-    ├── apply_annSolution_cyberAttackDetection/
-    └── apply_olsSolution_cyberAttackDetection/
-```
+The work demonstrates the complete AI lifecycle:
+- Dataset acquisition and validation  
+- Data preprocessing and feature engineering  
+- Model training and evaluation  
+- Integrity and leakage validation  
+- Containerized deployment and inference  
+- Interpretable prediction outputs  
 
 ---
 
-## 📊 Dataset Information
+## 🎯 Objectives
+
+- Build an AI-based intrusion detection system  
+- Compare ANN and OLS models under identical conditions  
+- Ensure experimental reproducibility and integrity  
+- Enable containerized inference via Docker Compose  
+- Provide auditable and interpretable predictions  
+
+---
+
+## 📊 Dataset
 
 ### NSL-KDD Dataset
-**Source:** University of New Brunswick (UNB), Canadian Institute for Cybersecurity  
-**URL:** https://www.unb.ca/cic/datasets/nsl.html  
-**License:** ✅ Open Source - Academic Use Permitted  
-**GDPR Compliant:** ✅ Synthetic network traffic (no personal data)
 
-**Citation:**
-```
-Tavallaee, M., Bagheri, E., Lu, W., & Ghorbani, A. A. (2009).
-A detailed analysis of the KDD CUP 99 data set.
-IEEE Symposium on Computational Intelligence for Security and Defense Applications.
-```
+This project is based on the **NSL-KDD** dataset, a refined benchmark dataset for network intrusion detection research.
 
-**Dataset Composition:**
-- Total Records: 148,517
-- Features: 41 + 1 label
-- Training Set: 125,973 records
-- Testing Set: 22,544 records
-- Attack Types: Normal, DoS, Probe, R2L, U2R
+- **Original Provider:**  
+  University of New Brunswick (UNB), Canadian Institute for Cybersecurity  
+- **Reference Page:**  
+  https://www.unb.ca/cic/datasets/nsl.html  
+
+At the time of development, the dataset was not directly downloadable from the original source in a machine-accessible format.  
+Therefore, a **publicly available Kaggle mirror** was used to obtain the dataset in a reproducible manner.
+
+- **Kaggle Dataset Source:**  
+  https://www.kaggle.com/datasets/hassan06/nslkdd  
+
+The dataset is **synthetic**, **GDPR-compliant**, and widely used for academic and educational research.
+
+---
+
+## 🧠 Modeling Approach
+
+### Artificial Neural Network (ANN)
+- Feed-forward neural network implemented using TensorFlow/Keras  
+- Binary classification (Normal vs Attack)  
+- Dropout-based regularization  
+- Optimized for strong generalization performance  
+
+### Ordinary Least Squares (OLS)
+- Linear baseline classifier  
+- Provides a transparent and computationally efficient reference  
+- Highlights trade-offs between complexity and performance  
+
+Both models share the same preprocessing pipeline and feature space to ensure fair comparison.
+
+---
+
+## 🐳 System Architecture (High Level)
+
+The system is composed of four Docker-based components:
+
+- **learningBase** – training and testing datasets  
+- **activationBase** – activation (inference) dataset  
+- **knowledgeBase** – trained models and preprocessing artifacts  
+- **codeBase** – inference logic and prediction pipeline  
+
+All components are orchestrated using **Docker Compose** to enable end-to-end execution.
 
 ---
 
 ## 🚀 Getting Started
 
-### Prerequisites
-- Python 3.9+
-- Docker & Docker Compose
-- Git
-- 8GB RAM minimum
+### 1️⃣ Fork and Clone the Repository
 
-### Installation
-
-1. **Clone this repository:**
 ```bash
-git clone https://github.com/YourUsername/AI-CPS.git
+git clone https://github.com/Gowtham-R-19/AI-CPS.git
 cd AI-CPS
 ```
 
-2. **Create Python virtual environment:**
+### 2️⃣ Python Environment (Optional – for local analysis)
+
 ```bash
-python3 -m venv venv
-source venv/bin/activate  # Mac/Linux
-# OR
-venv\Scripts\activate     # Windows
+python -m venv venv
+source venv/bin/activate   # Linux / macOS
+venv\Scripts\activate      # Windows
 ```
 
-3. **Install dependencies:**
+Install required Python packages:
+
 ```bash
 pip install -r requirements.txt
 ```
 
-4. **Create Docker volume:**
+This step is required only if you want to run training, evaluation, or analysis locally.
+
+### 3️⃣ Docker Prerequisites
+
+Ensure Docker and Docker Compose are installed.
+
+Verify installation:
+
+```bash
+docker --version
+docker compose version
+```
+
+### 4️⃣ Create Docker Volume (Required)
+
+A shared Docker volume is used for communication between containers.
+
 ```bash
 docker volume create ai_system
 ```
+## ▶️ Running Inference with Docker Compose
 
----
+### 🔹 ANN-Based Inference
 
-## 📈 Project Roadmap
+```bash
+cd scenarios/apply_annSolution_cyberAttackDetection
+docker compose up
+```
 
-### ✅ Subgoal 1: Git Usage (Week 1)
-- [x] Fork AI-CPS repository
-- [x] Set up team collaboration
-- [x] Create initial README
-- [ ] Make 3 commits per team member
+This will:
 
-### 🔄 Subgoal 2: Data Scraping & Preparation (Week 2)
-- [ ] Scrape NSL-KDD dataset from web
-- [ ] Clean and preprocess data
-- [ ] Create training/test/activation splits
-- [ ] Generate CSV files
+```
+- Load the trained ANN model
+- Apply preprocessing
+- Run inference on activation data
+- Display predictions and confidence levels in the terminal
+```
 
-### 🔄 Subgoal 3: Docker Data Provision (Week 3)
-- [ ] Build learningBase image
-- [ ] Build activationBase image
-- [ ] Publish to Docker Hub
-- [ ] Test with docker-compose
+### 🔹 OLS-Based Inference
 
-### 🔄 Subgoal 4: ANN Model Creation (Week 4)
-- [ ] Design neural network architecture
-- [ ] Train model with TensorFlow
-- [ ] Generate visualizations
-- [ ] Achieve >90% accuracy
+```bash
+cd scenarios/apply_olsSolution_cyberAttackDetection
+docker compose up
+```
 
-### 🔄 Subgoal 5: OLS Baseline Model (Week 4)
-- [ ] Implement logistic regression
-- [ ] Compare with ANN performance
-- [ ] Generate diagnostic plots
+This executes the same pipeline using the OLS baseline model.
 
-### 🔄 Subgoal 6: Docker Model Provision (Week 5)
-- [ ] Build knowledgeBase image
-- [ ] Build codeBase image
-- [ ] Publish to Docker Hub
-- [ ] Test inference pipeline
+## 📊 Viewing Inference Results
 
-### 🔄 Subgoal 7: Docker Compose Integration (Week 6)
-- [ ] Create docker-compose files
-- [ ] Test end-to-end pipeline
-- [ ] Final documentation
+Inference results are printed directly in the terminal and include:
 
----
+```
+- Prediction (Normal / Attack)
+- Confidence score
+- Risk-level interpretation
+- End-to-end inference status
+```
 
-## 🐳 Docker Images
+Each pipeline exits cleanly after completion.
 
-All images will be published at Docker Hub:
+## 📁 Repository Organization
 
-1. **learningBase_cyberAttackDetection**  
-   - Contains: training_data.csv, test_data.csv
-   - Pull: `docker pull username/learningBase_cyberAttackDetection`
+The repository is organized into modular components:
 
-2. **activationBase_cyberAttackDetection**  
-   - Contains: activation_data.csv
-   - Pull: `docker pull username/activationBase_cyberAttackDetection`
+```
+data/        – raw and processed datasets
+models/      – trained models and experiment runs
+images/      – Docker image definitions
+scenarios/   – Docker Compose deployment pipelines
+documentation/ – integrity and results documentation
+```
 
-3. **knowledgeBase_cyberAttackDetection**  
-   - Contains: Trained models (.h5, .pkl)
-   - Pull: `docker pull username/knowledgeBase_cyberAttackDetection`
+Each major directory contains (or will contain) its own dedicated README.md.
 
-4. **codeBase_cyberAttackDetection**  
-   - Contains: Inference scripts
-   - Pull: `docker pull username/codeBase_cyberAttackDetection`
+## 📜 License
 
----
+This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0).
 
-## 🔬 Expected Results
+## 📚 References & Tools
 
-### ANN Model Performance
-- **Binary Classification:** 94-98% accuracy
-- **Multi-class Classification:** 87-93% accuracy
-- **Training Time:** 10-15 minutes
-- **Inference Time:** <10ms per sample
+```
+TensorFlow / Keras – https://www.tensorflow.org
+Docker – https://www.docker.com
+NSL-KDD (UNB) – https://www.unb.ca/cic/datasets/nsl.html
+NSL-KDD (Kaggle Mirror) – https://www.kaggle.com/datasets/hassan06/nslkdd
+University of Potsdam – https://www.uni-potsdam.de
+```
 
-### OLS Baseline Performance
-- **Binary Classification:** 75-82% accuracy
-- **ANN Improvement:** +12-16% over OLS
+## ℹ️ Notes
 
----
-
-## 📚 References
-
-1. Tavallaee, M., Bagheri, E., Lu, W., & Ghorbani, A. A. (2009). A detailed analysis of the KDD CUP 99 data set. IEEE Symposium on Computational Intelligence for Security and Defense Applications.
-
-2. NSL-KDD Dataset: https://www.unb.ca/cic/datasets/nsl.html
-
-3. Grum, M. (2022). Construction of a Concept of Neuronal Modeling. Springer Gabler Wiesbaden.
-
----
-
-## 👥 Team Contributions
-
-### G (Team Member 1)
-- Data acquisition and scraping
-- Data preprocessing
-- Docker data images
-- Documentation
-
-### V (Team Member 2)
-- ANN model development
-- OLS baseline model
-- Docker model images
-- Visualizations
-
----
-
-## 📝 License
-
-This project is licensed under the **AGPL-3.0 License** in accordance with the AI-CPS repository.
-
-**Attribution Required:**
-- This project was created as part of the course "M. Grum: Advanced AI-based Application Systems"
-- Junior Chair for Business Information Science, esp. AI-based Application Systems
-- University of Potsdam, Germany
-- Dataset from UNB Canadian Institute for Cybersecurity
-
----
-
-## 🔗 Important Links
-
-- **GitHub Repository:** [Link will be added]
-- **Docker Hub:** [Link will be added]
-- **Course:** M. Grum: Advanced AI-based Application Systems
-- **University:** https://www.uni-potsdam.de/
-
----
-
-## 📞 Contact
-
-For questions or issues, please contact:
-- **G:** [email]
-- **V:** [email]
-
-**Submission Deadline:** February 5, 2026, 10:00 AM
-
----
-
-## ⚠️ Important Notes
-
-- This is an academic project for research purposes only
-- All datasets used are open-source and GDPR compliant
-- No commercial use without permission
-- Follow university academic integrity policies
-
----
-
-**Last Updated:** January 5, 2026  
-**Status:** 🔄 In Progress - Subgoal 1 (Day 1)
+```
+- Developed strictly for academic and educational purposes
+- Part of the Advanced AI-based Application Systems (AIBAS) coursework
+- Not intended for production deployment
+- University of Potsdam · AIBAS Coursework · AI-based Cybersecurity
+```
