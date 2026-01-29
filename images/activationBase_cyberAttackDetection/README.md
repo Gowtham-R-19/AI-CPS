@@ -8,7 +8,6 @@
 - **Institution:** University of Potsdam, Germany  
 - **Authors:**   Gowtham Ramakrishna
 - **Purpose:** Provide input data for model inference (activation)
-- **License:** AGPL-3.0
 
 ## Image Contents
 
