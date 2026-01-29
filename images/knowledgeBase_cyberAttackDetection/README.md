@@ -3,7 +3,7 @@
 ## Image Information
 
 - **Author:** Vaishnavi Vijaya
-- **Course:** Marcus Grum: Advanced AI-based Application Systems
+- **Course:** M. Grum: Advanced AI-based Application Systems
 - **Institution:** University of Potsdam – Junior Chair for Business Information Science (AI-based Application Systems)
 - **Purpose:** Provide trained AI models for inference (knowledge base image)
 - **License:** AGPL-3.0
