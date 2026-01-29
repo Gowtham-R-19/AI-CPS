@@ -1,14 +1,10 @@
 # 🔐 Cyber Attack Detection System using ANN and OLS
 
-**Course:** M. Grum – Advanced AI-based Application Systems (AIBAS)  
-**Instructor:** Prof. Dr. Marcus Grum  
-**Chair:** Junior Chair for Business Information Science,  
-especially AI-based Application Systems  
-**Institution:** University of Potsdam, Germany  
-
-**Authors:**  
-- **Gowtham Ramakrishna**  
-- **Vaishnavi Vijaya**
+- **Course:** M. Grum – Advanced AI-based Application Systems - Data Science and Business Analytics
+- **Instructor:** Prof. Dr. Marcus Grum  
+- **Chair:** Junior Chair for Business Information Science, especially AI-based Application Systems  
+- **Institution:** University of Potsdam, Germany  
+- **Authors:**   Gowtham Ramakrishna, Vaishnavi Vijaya
 
 ---
 
