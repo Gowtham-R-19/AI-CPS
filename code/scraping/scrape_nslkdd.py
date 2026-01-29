@@ -1,13 +1,27 @@
 """
-NSL-KDD Dataset Web Scraping Script - FULL IMPLEMENTATION
-Course: M. Grum: Advanced AI-based Application Systems
-University of Potsdam
+================================================================================
+Title: NSL-KDD Dataset Web Scraping Script — Full Implementation
 
-This script scrapes the NSL-KDD dataset from the official UNB website.
-It demonstrates web scraping as required by Subgoal 2.
+Course: M. Grum – Advanced AI-based Application Systems
+Track: Data Science and Business Analytics
+Instructor: Prof. Dr. Marcus Grum
+Chair: Junior Chair for Business Information Science, especially AI-based Application Systems
+Institution: University of Potsdam, Germany
+Author: Gowtham Ramakrishna
 
-Author: G (Team Lead - Data Engineer)
-Week: 2 (Subgoal 2: Data Scraping)
+Description:
+This script programmatically retrieves the NSL-KDD dataset from the official
+University of New Brunswick (UNB) source, ensuring structured, repeatable, and
+verifiable data acquisition for downstream preprocessing and machine learning
+pipelines.
+
+Key Design Principles:
+- Automated and reproducible data acquisition workflow
+- Source integrity validation and structured file persistence
+- Modular scraping and download pipeline design
+- Seamless handoff to preprocessing and feature engineering stages
+
+================================================================================
 """
 
 import requests
