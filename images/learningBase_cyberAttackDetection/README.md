@@ -8,7 +8,6 @@
 - **Institution:** University of Potsdam, Germany  
 - **Authors:**   Gowtham Ramakrishna
 - **Purpose:** Provide datasets required for model training and testing
-- **License:** AGPL-3.0
 
 ## Image Contents
 
