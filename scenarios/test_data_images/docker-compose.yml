@@ -1,12 +1,37 @@
-# docker-compose.yml - Test Data Images
-# Course: M. Grum: Advanced AI-based Application Systems
-# University of Potsdam
+# ==============================================================================
+# Title: Data Provision & Verification Orchestration — Cyber Attack Detection
+#        (Learning Base & Activation Base Validation)
 #
-# This file tests the learningBase and activationBase images
-# by mounting them to a shared volume.
+# Course: M. Grum – Advanced AI-based Application Systems
+# Track: Data Science and Business Analytics
+# Instructor: Prof. Dr. Marcus Grum
+# Chair: Junior Chair for Business Information Science, especially AI-based Application Systems
+# Institution: University of Potsdam, Germany
+# Authors: Gowtham Ramakrishna, Vaishnavi Vijaya
 #
-# Author: G & V
-# Week: 3 (Subgoal 3: Docker Data Provision)
+# Purpose:
+# - Validate that the learningBase and activationBase container images correctly
+#   provision training, validation, and activation datasets
+# - Mount all data into a shared external volume (ai_system) to simulate the
+#   production data exchange pattern used by training and inference pipelines
+# - Verify dataset availability, structure, and accessibility through an
+#   automated inspection and reporting service
+#
+# Description:
+# This Docker Compose configuration orchestrates a multi-service data validation
+# workflow that provisions training, validation, and activation datasets from
+# dedicated container images into a shared external volume. It executes a
+# verification service to confirm data presence, directory structure, and
+# accessibility, ensuring deterministic and reproducible data provisioning
+# across the cyber attack detection system.
+#
+# Key Design Principles:
+# - Separation of concerns between data provision and data verification services
+# - Deterministic inter-container data exchange via a shared external volume
+# - Automated validation and human-readable reporting
+# - Architectural consistency with training and inference orchestration layers
+#
+# ==============================================================================
 
 version: '3.8'
 
