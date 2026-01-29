@@ -2,10 +2,9 @@
 
 - **Course:** M. Grum – Advanced AI-based Application Systems - Data Science and Business Analytics
 - **Instructor:** Prof. Dr. Marcus Grum  
-- **Chair:** Junior Chair for Business Information Science, especially AI-based Application Systems  
-- **Institution:** University of Potsdam, Germany  
-- **Authors:**   Gowtham Ramakrishna, Vaishnavi Vijaya
-
+- **Chair:** Junior Chair for Business Information Science, especially AI-based Application Systems   
+- **Authors:** Gowtham Ramakrishna, Vaishnavi Vijaya
+- **Institution:** University of Potsdam, Germany 
 ---
 
 ## 📌 Project Overview
@@ -168,24 +167,6 @@ Inference results are printed directly in the terminal and include:
 
 Each pipeline exits cleanly after completion.
 
-## 📁 Repository Organization
-
-The repository is organized into modular components:
-
-```
-data/        – raw and processed datasets
-models/      – trained models and experiment runs
-images/      – Docker image definitions
-scenarios/   – Docker Compose deployment pipelines
-documentation/ – integrity and results documentation
-```
-
-Each major directory contains (or will contain) its own dedicated README.md.
-
-## 📜 License
-
-This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0).
-
 ## 📚 References & Tools
 
 ```
@@ -196,9 +177,10 @@ NSL-KDD (Kaggle Mirror) – https://www.kaggle.com/datasets/hassan06/nslkdd
 University of Potsdam – https://www.uni-potsdam.de
 ```
 
-## ℹ️ Notes
+## ℹ️ License and usage
 
 ```
+Licensed under the AGPL-3.0 license.
 - Developed strictly for academic and educational purposes
 - Part of the Advanced AI-based Application Systems (AIBAS) coursework
 - Not intended for production deployment
