@@ -1,18 +1,27 @@
 """
-Data Preprocessing Script for NSL-KDD Dataset - FULL IMPLEMENTATION
-Course: M. Grum: Advanced AI-based Application Systems
-University of Potsdam
+================================================================================
+Title: Data Preprocessing Script for NSL-KDD Dataset — Full Implementation
 
-This script:
-1. Loads raw NSL-KDD data from scraped files
-2. Cleans and validates data
-3. Encodes categorical variables
-4. Normalizes numerical features
-5. Creates train/test/activation splits
-6. Saves processed CSV files as required by Subgoal 2
+Course: M. Grum – Advanced AI-based Application Systems
+Track: Data Science and Business Analytics
+Instructor: Prof. Dr. Marcus Grum
+Chair: Junior Chair for Business Information Science, especially AI-based Application Systems
+Institution: University of Potsdam, Germany
+Author: Gowtham Ramakrishna
 
-Author: G (Team Lead - Data Engineer)
-Week: 2 (Subgoal 2: Data Preparation)
+Description:
+This script loads raw NSL-KDD network traffic data from scraped source files,
+performs data cleaning and validation, encodes categorical variables, normalizes
+numerical features, and generates structured train, test, and activation splits
+for downstream machine learning pipelines.
+
+Key Design Principles:
+- End-to-end reproducible data preprocessing pipeline
+- Robust data validation and integrity enforcement
+- Modular feature engineering and transformation stages
+- Export compatibility with ANN and OLS training workflows
+
+================================================================================
 """
 
 import pandas as pd
