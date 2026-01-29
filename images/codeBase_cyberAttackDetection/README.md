@@ -1,6 +1,6 @@
 # codeBase_cyberAttackDetection
 
-> Docker image that contains runtime inference logic for the AI-CPS intrusion detection pipeline.
+- Docker image that contains runtime inference logic for the AI-CPS intrusion detection pipeline.
 
 ---
 
