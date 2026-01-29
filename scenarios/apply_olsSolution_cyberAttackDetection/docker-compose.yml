@@ -1,17 +1,36 @@
-# ============================================================
-# docker-compose.yml — OLS Inference
+# ==============================================================================
+# Title: OLS Inference Orchestration — Cyber Attack Detection (Docker Compose)
+#
 # Course: M. Grum – Advanced AI-based Application Systems
-# University of Potsdam
+# Track: Data Science and Business Analytics
+# Instructor: Prof. Dr. Marcus Grum
+# Chair: Junior Chair for Business Information Science, especially AI-based Application Systems
+# Institution: University of Potsdam, Germany
+# Authors: Gowtham Ramakrishna, Vaishnavi Vijaya
 #
 # Purpose:
-# - Apply OLS (logistic regression) model
-# - Same infrastructure as ANN
-# - Only difference: inference mode
+# - Apply the trained OLS (logistic regression) model to activation data for
+#   cyber attack detection
+# - Reuse the same multi-container infrastructure as the ANN pipeline to enable
+#   controlled, side-by-side performance comparison
+# - Enforce the use of a shared external volume (ai_system) mounted at /tmp in
+#   all services for deterministic data and model exchange
 #
-# Professor requirement:
-# - External volume "ai_system"
-# - Mounted as /tmp in ALL containers
-# ============================================================
+# Description:
+# This Docker Compose configuration orchestrates a multi-container inference
+# workflow for cyber attack detection using an OLS-based logistic regression
+# model. It coordinates the activation data provider, trained model provider,
+# and Python-based inference runtime, and enforces a shared external volume to
+# ensure reproducible and comparable inference execution across experimental
+# baselines.
+#
+# Key Design Principles:
+# - Architectural symmetry with the ANN inference pipeline
+# - Deterministic inter-container communication via a shared external volume
+# - Explicit dependency ordering for reliable startup sequencing
+# - Standardized execution for fair baseline comparison
+#
+# ==============================================================================
 
 version: "3.8"
 
