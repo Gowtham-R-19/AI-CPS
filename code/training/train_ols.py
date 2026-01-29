@@ -1,13 +1,26 @@
 """
-OLS Baseline Model Training Script - FULL IMPLEMENTATION
-Course: M. Grum: Advanced AI-based Application Systems
-University of Potsdam
+================================================================================
+Title: OLS Baseline Model Training Script — Full Implementation
 
-This script trains a logistic regression baseline for comparison with ANN.
-Expected accuracy: 75-82% (showing ANN improvement of 12-16%)
+Course: M. Grum – Advanced AI-based Application Systems
+Track: Data Science and Business Analytics
+Instructor: Prof. Dr. Marcus Grum
+Chair: Junior Chair for Business Information Science, especially AI-based Application Systems
+Institution: University of Potsdam, Germany
+Authors: Gowtham Ramakrishna, Vaishnavi Vijaya
 
-Author: V (Team Lead - ML Engineer)
-Week: 4 (Subgoal 5: OLS Model Creation)
+Description:
+This script implements a baseline Ordinary Least Squares (OLS)–based logistic
+regression training pipeline to establish a quantitative performance benchmark
+for comparative evaluation against the ANN-based intrusion detection model.
+
+Key Design Principles:
+- Reproducible baseline modeling and metric reporting
+- Transparent model assumptions and interpretability
+- Standardized performance benchmarking framework
+- Seamless integration with ANN evaluation and comparison workflows
+
+================================================================================
 """
 # ==========================================================
 # ⚖️ BASELINE GOVERNANCE NOTICE
