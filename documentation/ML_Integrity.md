@@ -69,14 +69,9 @@ The data leakage was caused by improper dataset splitting without explicit enfor
 
 The following remediation steps were executed:
 
-### Step 1
-- Recombined original training and test datasets into a unified dataset
-
-### Step 2
-- Removed all duplicate records to ensure uniqueness
-
-### Step 3
-- Performed a fresh stratified split based on binary labels
+- **Step 1:** Recombined original training and test datasets into a unified dataset.
+- **Step 2:** Removed all duplicate records to ensure uniqueness.
+- **Step 3:** Performed a fresh stratified split based on binary labels.
 
 **Command executed:**
 ```bash
@@ -133,15 +128,15 @@ The following policy is mandatory for all training executions:
 
 A mandatory integrity notice is embedded at the beginning of training scripts (`train_ann.py`, `train_ols.py`):
 
+### DATA INTEGRITY NOTICE
+
+**Before training, verify:**
+```bash
+python code/training/check_overlap.py
+
 ```
-==========================================================
-DATA INTEGRITY NOTICE
-Before training, verify:
-  python code/training/check_overlap.py
-Expected:
-  Overlap rows found: 0
-==========================================================
-```
+**Expected:**
+Overlap rows found: 0
 
 ---
 
