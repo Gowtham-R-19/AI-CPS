@@ -1,18 +1,27 @@
 """
-Dataset Overlap Check Script
-Course: M. Grum: Advanced AI-based Application Systems
-University of Potsdam
+================================================================================
+Title: Dataset Overlap Verification Script — Data Leakage Prevention
 
-Purpose:
-This script verifies that there is no data leakage between the training
-and testing datasets by checking for identical rows in both files.
+Course: M. Grum – Advanced AI-based Application Systems
+Track: Data Science and Business Analytics
+Instructor: Prof. Dr. Marcus Grum
+Chair: Junior Chair for Business Information Science, especially AI-based Application Systems
+Institution: University of Potsdam, Germany
+Authors: Vaishnavi Vijaya
 
-Why this matters:
-If the same records appear in both training and test sets, model performance
-metrics (accuracy, precision, recall, ROC-AUC) can be artificially inflated.
-This check ensures the evaluation results are scientifically valid.
+Description:
+This script validates the integrity of training and testing datasets by
+programmatically detecting identical records across splits, ensuring that
+no data leakage occurs and that model evaluation metrics remain scientifically
+sound and reproducible.
 
-Author: V (ML Engineer)
+Key Design Principles:
+- Automated data leakage detection and reporting
+- Scientific validity and experimental integrity enforcement
+- Scalable comparison logic for large-scale datasets
+- Seamless integration with preprocessing and training pipelines
+
+================================================================================
 """
 
 import pandas as pd
