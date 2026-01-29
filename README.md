@@ -206,5 +206,5 @@ University of Potsdam – https://www.uni-potsdam.de
 - Developed strictly for academic and educational purposes
 - Part of the Advanced AI-based Application Systems (AIBAS) coursework
 - Not intended for production deployment
-- University of Potsdam · AIBAS Coursework · AI-based Cybersecurity
+- University of Potsdam · AIBAS Coursework 
 ```
