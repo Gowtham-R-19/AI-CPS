@@ -1,13 +1,27 @@
 """
-ANN Model Training Script - FULL IMPLEMENTATION
-Course: M. Grum: Advanced AI-based Application Systems
-University of Potsdam
+================================================================================
+Title: ANN Model Training Script — Full Implementation
 
-This script trains a deep neural network for network intrusion detection.
-Expected accuracy: >90% (binary classification)
+Course: M. Grum – Advanced AI-based Application Systems
+Track: Data Science and Business Analytics
+Instructor: Prof. Dr. Marcus Grum
+Chair: Junior Chair for Business Information Science, especially AI-based Application Systems
+Institution: University of Potsdam, Germany
+Authors: Gowtham Ramakrishna, Vaishnavi Vijaya
 
-Author: V (Team Lead - ML Engineer)
-Week: 4 (Subgoal 4: ANN Model Creation)
+Description:
+This script implements a deep Artificial Neural Network (ANN) training pipeline
+for binary network intrusion detection, including feature scaling, model
+architecture configuration, training orchestration, and performance evaluation
+under a reproducible and research-grade workflow.
+
+Key Design Principles:
+- Deterministic training and evaluation for reproducible experiments
+- Modular ANN architecture design for rapid experimentation
+- Integrated performance tracking and metric reporting
+- Seamless handoff to model inference and deployment pipelines
+
+================================================================================
 """
 
 import pandas as pd
