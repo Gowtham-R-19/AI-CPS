@@ -1,18 +1,24 @@
 """
-Model Inference Script - RUN-ID + DOCKER AWARE IMPLEMENTATION
-Course: M. Grum: Advanced AI-based Application Systems
-University of Potsdam
+================================================================================
+Title: Model Inference Script – Run-ID & Docker-Aware Implementation
 
-This script performs inference using trained models on new network traffic data.
-Supports both ANN and OLS models.
+Course: M. Grum – Advanced AI-based Application Systems
+Track: Data Science and Business Analytics Instructor: Prof. Dr. Marcus Grum
+Chair: Junior Chair for Business Information Science, especially AI-based Application Systems
+Institution: University of Potsdam, Germany
+Authors: Gowtham Ramakrishna, Vaishnavi Vijaya
 
-Design:
-- Run-ID aware (LATEST_RUN.txt)
-- Docker compatible (env-based paths)
-- Reproducible & research-grade
+Description:
+This script performs inference using trained machine learning models on new
+network traffic data. It supports both Artificial Neural Network (ANN) and
+Ordinary Least Squares (OLS) models.
 
-Author: V (ML Engineer)
-Week: 5 (Subgoal 6: Docker Model Provision)
+Key Design Principles:
+- Run-ID aware execution using LATEST_RUN.txt for model version resolution
+- Docker-compatible path handling via environment-based configuration
+- Reproducible and research-grade workflow design
+- Modular and extensible architecture for future model integration
+================================================================================
 """
 
 import os
