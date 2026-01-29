@@ -1,13 +1,30 @@
-# activationBase_cyberAttackDetection Dockerfile
-# Course: M. Grum: Advanced AI-based Application Systems
-# University of Potsdam
-#
-# This image provides activation/inference data for testing the trained model.
-# It contains:
-# - activation_data.csv (2 sample records: 1 normal + 1 attack)
-#
-# Author: G (Data Engineer)
-# Week: 3 (Subgoal 3: Docker Data Provision)
+"""
+================================================================================
+Title: Activation Base Image — Cyber Attack Detection (Inference Data Provision)
+
+Course: M. Grum – Advanced AI-based Application Systems
+Track: Data Science and Business Analytics
+Instructor: Prof. Dr. Marcus Grum
+Chair: Junior Chair for Business Information Science, especially AI-based Application Systems
+Institution: University of Potsdam, Germany
+Authors: Gowtham Ramakrishna, Vaishnavi Vijaya
+
+Description:
+This Docker image provisions a minimal activation dataset for testing trained
+intrusion detection models. It packages a controlled CSV file containing two
+representative records—one normal traffic sample and one attack sample—and
+exposes them within a standardized container file structure to support
+deterministic and reproducible inference validation workflows.
+
+Key Design Principles:
+- Minimal and controlled activation dataset provisioning
+- Deterministic container build and file system layout
+- Transparent data access for inspection and inference testing
+- Seamless integration with ANN and OLS model pipelines
+
+================================================================================
+"""
+
 
 FROM busybox:latest  
 
