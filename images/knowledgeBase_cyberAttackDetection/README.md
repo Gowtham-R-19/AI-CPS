@@ -2,9 +2,11 @@
 
 ## Image Information
 
-- **Author:** Vaishnavi Vijaya
-- **Course:** M. Grum: Advanced AI-based Application Systems
-- **Institution:** University of Potsdam – Junior Chair for Business Information Science (AI-based Application Systems)
+- **Course:** M. Grum – Advanced AI-based Application Systems - Data Science and Business Analytics
+- **Instructor:** Prof. Dr. Marcus Grum  
+- **Chair:** Junior Chair for Business Information Science, especially AI-based Application Systems  
+- **Institution:** University of Potsdam, Germany  
+- **Authors:**   Vaishnavi Vijaya
 - **Purpose:** Provide trained AI models for inference (knowledge base image)
 - **License:** AGPL-3.0
 
@@ -101,11 +103,12 @@ volumes:
 
 ---
 
-## License
+## License & usage
 
-Licensed under the **AGPL-3.0 License**.
-
+```
+Licensed under the AGPL-3.0 license.
 - Developed strictly for academic and educational purposes
 - Part of the Advanced AI-based Application Systems (AIBAS) coursework
 - Not intended for production deployment
 - University of Potsdam · AIBAS Coursework 
+```
