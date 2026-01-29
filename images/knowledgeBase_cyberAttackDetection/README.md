@@ -8,7 +8,6 @@
 - **Institution:** University of Potsdam, Germany  
 - **Authors:**   Vaishnavi Vijaya
 - **Purpose:** Provide trained AI models for inference (knowledge base image)
-- **License:** AGPL-3.0
 
 ---
 

@@ -11,7 +11,6 @@
 - **Institution:** University of Potsdam, Germany  
 - **Authors:**   Vaishnavi Vijaya
 - **Purpose:** Provide inference scripts that run ANN or OLS models against activation data
-- **License:** AGPL-3.0
 ---
 
 ## 📌 Overview
