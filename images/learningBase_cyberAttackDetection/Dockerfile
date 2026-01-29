@@ -1,14 +1,27 @@
-# learningBase_cyberAttackDetection Dockerfile
-# Course: M. Grum: Advanced AI-based Application Systems
-# University of Potsdam
+# ==============================================================================
+# Title: Learning Base Image — Cyber Attack Detection (Training & Evaluation Data Provision)
 #
-# This image provides training and testing data for the cyber attack detection system.
-# It contains:
-# - training_data.csv (80% of dataset - 118,813 records)
-# - test_data.csv (20% of dataset - 29,704 records)
+# Course: M. Grum – Advanced AI-based Application Systems
+# Track: Data Science and Business Analytics
+# Instructor: Prof. Dr. Marcus Grum
+# Chair: Junior Chair for Business Information Science, especially AI-based Application Systems
+# Institution: University of Potsdam, Germany
+# Author: Gowtham Ramakrishna
 #
-# Author: G (Data Engineer)
-# Week: 3 (Subgoal 3: Docker Data Provision)
+# Description:
+# This Docker image provisions structured training and evaluation datasets for
+# the cyber attack detection system. It packages pre-split CSV files representing
+# training and validation data and exposes them within a standardized container
+# directory layout to enable deterministic, reproducible model training and
+# performance evaluation workflows.
+#
+# Key Design Principles:
+# - Deterministic provisioning of training and evaluation datasets
+# - Standardized container directory structure for pipeline compatibility
+# - Transparent data access for inspection and debugging
+# - Seamless integration with ANN and OLS training pipelines
+#
+# ==============================================================================
 
 FROM busybox:latest
 
