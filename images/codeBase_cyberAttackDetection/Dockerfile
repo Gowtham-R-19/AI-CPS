@@ -1,12 +1,27 @@
-# codeBase_cyberAttackDetection Dockerfile
+# ==============================================================================
+# Title: Code Base Image — Cyber Attack Detection (Model Inference Runtime)
+#
 # Course: M. Grum – Advanced AI-based Application Systems
-# University of Potsdam
-
-# This image provides inference code for cyber attack detection.
-# It contains the Python script that loads models and performs predictions.
-
-# Author: V (ML Engineer)
-# Week: 5 (Subgoal 6: Docker Model Provision)
+# Track: Data Science and Business Analytics
+# Instructor: Prof. Dr. Marcus Grum
+# Chair: Junior Chair for Business Information Science, especially AI-based Application Systems
+# Institution: University of Potsdam, Germany
+# Author: Vaishnavi Vijaya
+#
+# Description:
+# This Docker image provisions a lightweight Python-based runtime environment for
+# cyber attack detection inference. It installs required system and Python
+# dependencies, packages the model inference script, and exposes a configurable
+# entrypoint for executing predictions using trained ANN or OLS models in a
+# deterministic, containerized environment.
+#
+# Key Design Principles:
+# - Minimal and reproducible inference runtime provisioning
+# - Dependency isolation and deterministic container builds
+# - Configurable execution via entrypoint and runtime arguments
+# - Seamless integration with trained model artifacts and data pipelines
+#
+# ==============================================================================
 
 FROM python:3.9-slim
 
