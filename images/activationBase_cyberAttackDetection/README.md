@@ -6,7 +6,7 @@
 - **Instructor:** Prof. Dr. Marcus Grum  
 - **Chair:** Junior Chair for Business Information Science, especially AI-based Application Systems  
 - **Institution:** University of Potsdam, Germany  
-- **Authors:**   Gowtham Ramakrishna, Vaishnavi Vijaya
+- **Authors:**   Gowtham Ramakrishna
 - **Purpose:** Provide input data for model inference (activation)
 - **License:** AGPL-3.0
 
