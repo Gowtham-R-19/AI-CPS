@@ -7,7 +7,7 @@ Track: Data Science and Business Analytics
 Instructor: Prof. Dr. Marcus Grum
 Chair: Junior Chair for Business Information Science, especially AI-based Application Systems
 Institution: University of Potsdam, Germany
-Authors: Gowtham Ramakrishna, Vaishnavi Vijaya
+Author: Gowtham Ramakrishna
 
 Description:
 This Docker image provisions a minimal activation dataset for testing trained
