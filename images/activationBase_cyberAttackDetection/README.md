@@ -1,6 +1,6 @@
 # activationBase_cyberAttackDetection
 
-## Image Information
+## Image Information 
 
 - **Author:** Gowtham Ramakrishna
 - **Course:** M. Grum: Advanced AI-based Application Systems
