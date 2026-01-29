@@ -1,19 +1,34 @@
-# ============================================================
-# docker-compose.yml — ANN Inference
+# ==============================================================================
+# Title: ANN Inference Orchestration — Cyber Attack Detection (Docker Compose)
+#
 # Course: M. Grum – Advanced AI-based Application Systems
-# University of Potsdam
+# Track: Data Science and Business Analytics
+# Instructor: Prof. Dr. Marcus Grum
+# Chair: Junior Chair for Business Information Science, especially AI-based Application Systems
+# Institution: University of Potsdam, Germany
+# Authors: Gowtham Ramakrishna, Vaishnavi Vijaya
 #
 # Purpose:
-# - Apply ANN model to activation data
-# - Uses three Docker images:
-#   1) activationBase  → provides activation_data.csv
-#   2) knowledgeBase   → provides trained ANN model
-#   3) codeBase        → runs inference logic
+# - Apply the trained ANN model to activation data for cyber attack detection
+# - Coordinate activation data, trained model artifacts, and inference runtime
+#   across isolated containers
+# - Enforce the use of a shared external volume (ai_system) mounted at /tmp in
+#   all services, as required for deterministic data and model exchange
 #
-# Professor requirement:
-# - External volume "ai_system"
-# - Mounted as /tmp in ALL containers
-# ============================================================
+# Description:
+# This Docker Compose configuration orchestrates a multi-container inference
+# workflow for cyber attack detection using an ANN model. It coordinates the
+# activation data provider, trained model provider, and Python-based inference
+# runtime, and enforces a shared external volume to enable deterministic and
+# reproducible data and model exchange across all services.
+#
+# Key Design Principles:
+# - Multi-container separation of data, models, and execution logic
+# - Deterministic inter-container communication via a shared external volume
+# - Explicit dependency ordering for reliable startup sequencing
+# - Seamless integration with ANN-based inference pipelines
+#
+# ==============================================================================
 
 version: "3.8"
 
