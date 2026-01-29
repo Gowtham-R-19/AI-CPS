@@ -1,18 +1,27 @@
 """
-Clean Dataset Re-Split Script
-Course: M. Grum: Advanced AI-based Application Systems
-University of Potsdam
+================================================================================
+Title: Clean Dataset Re-Split Script — Data Integrity Enforcement
 
-Purpose:
-This script removes duplicate records from the combined dataset and
-recreates clean training and test splits to eliminate data leakage.
+Course: M. Grum – Advanced AI-based Application Systems
+Track: Data Science and Business Analytics
+Instructor: Prof. Dr. Marcus Grum
+Chair: Junior Chair for Business Information Science, especially AI-based Application Systems
+Institution: University of Potsdam, Germany
+Author: Vaishnavi Vijaya
 
-Why this matters:
-Overlapping samples between training and test sets artificially inflate
-model performance metrics and invalidate evaluation results. This script
-ensures scientific integrity and reproducibility.
+Description:
+This script removes duplicate records from the consolidated dataset and
+reconstructs clean training and testing splits to eliminate data leakage,
+ensuring that downstream model evaluation remains scientifically valid
+and fully reproducible.
 
-Author: V (ML Engineer)
+Key Design Principles:
+- Deterministic dataset de-duplication and re-splitting logic
+- Scientific integrity and evaluation validity enforcement
+- Scalable handling of large-scale network traffic datasets
+- Seamless integration with preprocessing and model training pipelines
+
+================================================================================
 """
 
 import pandas as pd
