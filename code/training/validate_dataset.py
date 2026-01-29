@@ -1,3 +1,29 @@
+"""
+================================================================================
+Title: Dataset Validation Script — Model Readiness & Integrity Check
+
+Course: M. Grum – Advanced AI-based Application Systems
+Track: Data Science and Business Analytics
+Instructor: Prof. Dr. Marcus Grum
+Chair: Junior Chair for Business Information Science, especially AI-based Application Systems
+Institution: University of Potsdam, Germany
+Authors: Gowtham Ramakrishna
+
+Description:
+This script validates the structural and numerical integrity of processed
+training and testing datasets by verifying column consistency, detecting
+non-numeric features, identifying missing or infinite values, inspecting label
+distributions, and providing feature scale snapshots to ensure full model
+readiness and reproducible experimentation.
+
+Key Design Principles:
+- Automated dataset integrity and readiness verification
+- Scientific validity and experimental governance enforcement
+- Transparent feature and label diagnostics
+- Seamless integration with ANN and OLS training pipelines
+
+================================================================================
+"""
 import pandas as pd
 import numpy as np
 from pathlib import Path
