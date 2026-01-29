@@ -1,21 +1,38 @@
 """
-Model Inference Script - COURSE SUBMISSION VERSION (WITH FUTURE EXTENSIONS)
+================================================================================
+Title: Model Inference Script — Cyber Attack Detection (Docker-Aware Runtime)
 
-Course: M. Grum: Advanced AI-based Application Systems
-University of Potsdam
+Course: M. Grum – Advanced AI-based Application Systems
+Track: Data Science and Business Analytics
+Instructor: Prof. Dr. Marcus Grum
+Chair: Junior Chair for Business Information Science, especially AI-based Application Systems
+Institution: University of Potsdam, Germany
+Author: Vaishnavi Vijaya, Gowtham Ramakrishna
 
-This script performs inference using trained ANN / OLS models
-on activation data provided via Docker images.
+Purpose:
+- Apply trained ANN or OLS models to activation data for cyber attack detection
+- Enforce professor-mandated Docker path usage for model and data access
+- Produce structured, interpretable, and confidence-based inference outputs
 
-IMPORTANT:
-- This file CONTAINS advanced logic (run registry, local paths, history)
-- That logic is COMMENTED OUT for COURSE SUBMISSION
-- Active logic STRICTLY follows professor requirements:
+Important:
+- Active execution strictly follows Docker-exposed paths:
     /tmp/activationBase/activation_data.csv
     /tmp/knowledgeBase/currentAiSolution.h5
     /tmp/knowledgeBase/currentOlsSolution.pkl
 
-Author: V (ML Engineer)
+Description:
+This script implements a Docker-aware inference runtime that loads trained
+ANN and OLS model artifacts and optional preprocessing components from
+container-mounted paths, preprocesses activation data, executes deterministic
+prediction logic, and reports labeled risk levels and confidence scores for
+each sample.
+
+Key Design Principles:
+- Strict compliance with standardized /tmp container paths
+- Reproducible preprocessing via optional scaler integration
+- Transparent and deterministic prediction and reporting workflow
+
+================================================================================
 """
 
 # ==========================================================
